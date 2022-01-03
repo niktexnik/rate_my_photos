@@ -1,0 +1,11 @@
+<h1>All photos</h1>
+<ul class="list-inline">
+    <% @photos.each do |form| %>
+    <li class="list-group-item">
+        <%= link_to form.name, form %>
+    </li>
+    <% end %>
+</ul>
+<div>
+<%= link_to "Add photo", new_photo_path, class:"btn btn-lg btn-primary" %>
+</div>

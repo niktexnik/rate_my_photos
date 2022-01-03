@@ -1,0 +1,17 @@
+<%= form_for @photo, html: { multipart: true } do |form| %>
+<div>
+  <%= form.label "image" %>
+  <%= form.file_field :image %>
+  <%= form.label "description" %>
+  <%= form.text_field :description%>
+  <%= form.label "name" %>
+  <%= form.text_field :name%>
+</div>
+     <div class='btn'>
+      <%=form.submit "Save", class:'btn btn-lg btn-primary'%>
+    </div>
+</div>
+<% end %>
+<div class='btn'>
+  <%= link_to 'Back to all photos', root_path, class:'btn btn-lg btn-primary' %>
+</div>

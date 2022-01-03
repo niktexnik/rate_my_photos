@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  image: MyString
+  description: MyText
+  status: MyString
+  moderated: false
+  moderated_date: 2022-01-02
+  user: one
+
+two:
+  image: MyString
+  description: MyText
+  status: MyString
+  moderated: false
+  moderated_date: 2022-01-02
+  user: two
