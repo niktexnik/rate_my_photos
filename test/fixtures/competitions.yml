@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  competition_name: MyString
+  competition_description: MyText
+  competition_image: MyString
+  start_date: 2022-01-07 21:38:43
+  end_date: 2022-01-07 21:38:43
+
+two:
+  competition_name: MyString
+  competition_description: MyText
+  competition_image: MyString
+  start_date: 2022-01-07 21:38:43
+  end_date: 2022-01-07 21:38:43

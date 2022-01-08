@@ -1,0 +1,9 @@
+<h1><%= @competition.competition_name %></h1>
+
+<%
+=begin%>
+ <%= image_tag @photo.image.url(:large), class: 'img-fluid rounded-start'%> 
+<%
+=end%>
+<%= link_to "Back", root_path, class: 'btn btn-warning'%>
+<%= link_to "Add photo", new_photo_path(@competition.id), class: 'btn btn-inverse'%>

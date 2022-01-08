@@ -10,17 +10,16 @@
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
-
-  <body class='container'>
-  <div class="container">
-        <% flash.each do |message_type, message| %>
-        <div class="alert alert-<%= message_type %>"><%= message %></div>
-        <% end %>
-    </div>
   <%=render 'shared/navbar'%>
-    <p class="notice"><%= notice %></p>
-    <p class="alert"><%= alert %></p>
+  <div class="album py-5 bg-light">
+  <body class='container'>
+   <div class="container">
+      <% flash.each do |message_type, message| %>
+      <div class="alert alert-<%= message_type %>"><%= message %></div>
+      <% end %>
+    </div>
     <%= yield %>
   </body>
   <%=render 'shared/footer'%>
+  </div>
 </html>

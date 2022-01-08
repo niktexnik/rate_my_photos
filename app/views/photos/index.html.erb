@@ -1,11 +1,19 @@
-<h1>All photos</h1>
-<ul class="list-inline">
-    <% @photos.each do |form| %>
-    <li class="list-group-item">
-        <%= link_to form.name, form %>
-    </li>
-    <% end %>
-</ul>
-<div>
-<%= link_to "Add photo", new_photo_path, class:"btn btn-lg btn-primary" %>
+<h1>Your uploaded photos</h1>
+<div class="card-group" style="max-width: 640px;">
+<%= @photos.each do |photo| %>
+<div class="card mb-3">
+  <div class="row g-0">
+    <div class="col-md-4">
+      <%= image_tag photo.image.url(:large), class: 'img-fluid rounded-start'%>
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title"><%= link_to photo.name, photo %></h5>
+        <p class="card-text"><%=photo.description%></p>
+        <p class="card-text"><small class="text-muted">Last updated <%=photo.created_at%></small></p>
+      </div>
+    </div>
+  </div>
+</div>
+<%end%>
 </div>

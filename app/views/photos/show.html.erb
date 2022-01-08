@@ -1,1 +1,21 @@
 <h1><%= @photo.name %></h1>
+<div><%= image_tag  @photo.image.url(:large), {:class => 'img-fluid img-thumbnail'}%></div> 
+<div class="btn-group" role="group" aria-label="Basic mixed styles example">
+    <%= link_to "Edit photo", edit_photo_path(@photo), class: 'btn btn-success' %>
+    <%= link_to "Delete photo", photo_path(@photo), class: 'btn btn-danger',
+                  method: :delete,
+                  data: { confirm: "Are you shure?" } %>
+    <%= link_to "Back", root_path, class: 'btn btn-warning'%>
+</div>
+<div class="media-block">
+<h2>Comments</h2>
+    <%=@comments.each do |comment|%>
+ <div class="media-body">
+ <div class="mar-btm">
+ <a href="#" class="btn-link text-semibold media-heading box-inline"><%=current_user.email%></a>
+  <p><%=comment.body%></p>
+ <p class="text-muted text-sm"><i class="fa fa-mobile fa-lg"></i> <%=comment.created_at%> </p>
+ </div>
+    <%end%>
+</div>
+<%=render "comments/comments"%>
