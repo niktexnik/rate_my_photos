@@ -3,7 +3,11 @@ Rails.application.routes.draw do
   ActiveAdmin.routes(self)
   root to: 'competitions#index'
   resources :competitions do
-    post '/competitions/:id', to: 'photos#new'
+    resources :photos do
+      member do
+        get 'preview'
+      end
+    end
   end
   devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
   resources :photos do

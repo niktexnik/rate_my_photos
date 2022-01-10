@@ -16,6 +16,7 @@
   <p><%=comment.body%></p>
  <p class="text-muted text-sm"><i class="fa fa-mobile fa-lg"></i> <%=comment.created_at%> </p>
  </div>
+ <%= link_to "delete", photo_comment_path(@photo, comment), data: {method: :delete, confirm: "Are you shure"}, class: "btn btn-danger"  %>
     <%end%>
 </div>
 <%=render "comments/comments"%>

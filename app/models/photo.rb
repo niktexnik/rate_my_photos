@@ -3,5 +3,5 @@ class Photo < ApplicationRecord
   mount_uploader :image, ImageUploader
   validates :name, presence: true
   belongs_to :user
-  belongs_to :competition
+  belongs_to :competition, optional: true
 end

@@ -11,14 +11,13 @@ class PhotosController < ApplicationController
   end
 
   def new
-    @user = User.find(current_user.id)
-    @photo = @user.photos.new
+    @competition = Competition.find(params[:competition_id])
+    @photo = @competition.photos.build
   end
 
   def create
-    # @user = User.find(current_user.id)
-    # @photo = @user.photos.new(photo_params)
-    @photo = current_user.photos.build(photo_params)
+    @competition = Competition.find(params[:competition_id])
+    @photo = @competition.photos.build(photo_params)
 
     if @photo.save
       flash[:success] = 'Success'
@@ -52,9 +51,15 @@ class PhotosController < ApplicationController
     redirect_to root_path
   end
 
+  def preview
+    @photo = Photo.find(params[:id])
+    @comment = @photo.comments.build
+    @comments = @photo.comments.all.includes(:user)
+  end
+
   private
 
   def photo_params
-    params.require(:photo).permit(:name, :description, :image)
+    params.require(:photo).permit(:name, :description, :image).merge(user_id: current_user.id)
   end
 end

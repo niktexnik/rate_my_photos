@@ -5,6 +5,7 @@ class CompetitionsController < ApplicationController
 
   def show
     @competition = Competition.find(params[:id])
+    @photos = @competition.photos
   end
 
   # def create; end

@@ -1,0 +1,29 @@
+<h2><%= @photo.name %></h2>
+
+<div class="card mb-3">
+  <div class="row g-0">
+      <%= image_tag @photo.image.url(:large), class: 'img-fluid rounded-start'%>
+    <div>
+      <div class="card-body">
+        <p class="card-text"><%=@photo.description%></p>
+        <p class="card-text"><small class="text-muted">Last updated <%=@photo.created_at%></small></p>
+      </div>
+    </div>
+  </div>
+  	<div class="btn-group">
+		<%= link_to "Back", root_path, class: 'btn btn-warning'%>
+	</div>
+    <h2>Comments</h2>
+    <%@comments.each do |comment|%>
+      <div class="media-body">
+        <div class="mar-btm">
+          <a href="#" class="btn-link text-semibold media-heading box-inline"><%=comment.user.email%></a>
+          <p><%=comment.body%></p>
+          <p class="text-muted text-sm"><i class="fa fa-mobile fa-lg"></i> <%=comment.created_at%> </p>
+      </div>
+        <%= link_to "delete", photo_comment_path(@photo, comment), data: {method: :delete, confirm: "Are you shure"}, class: "btn btn-danger"  %>
+    </div>
+    <%end%>
+    </div>
+    <%=render "comments/comments"%>
+</div>
