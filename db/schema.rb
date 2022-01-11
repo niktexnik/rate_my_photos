@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_07_184233) do
+ActiveRecord::Schema.define(version: 2022_01_10_213524) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,9 +53,9 @@ ActiveRecord::Schema.define(version: 2022_01_07_184233) do
   end
 
   create_table "competitions", force: :cascade do |t|
-    t.string "competition_name"
-    t.text "competition_description"
-    t.string "competition_image"
+    t.string "name"
+    t.text "description"
+    t.string "image"
     t.datetime "start_date"
     t.datetime "end_date"
     t.datetime "created_at", precision: 6, null: false
@@ -73,6 +73,8 @@ ActiveRecord::Schema.define(version: 2022_01_07_184233) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "competition_id", null: false
+    t.string "aasm_state"
+    t.text "rejection_reason"
     t.index ["competition_id"], name: "index_photos_on_competition_id"
     t.index ["user_id"], name: "index_photos_on_user_id"
   end
