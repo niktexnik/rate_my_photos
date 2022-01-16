@@ -1,5 +1,4 @@
 ActiveAdmin.register Photo do
-
   # See permitted parameters documentation:
   # # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
   # index do
@@ -14,7 +13,7 @@ ActiveAdmin.register Photo do
 
   # Uncomment all parameters which should be permitted for assignment
   #
-  permit_params :image, :name, :description, :status, :moderated, :moderated_date, :user_id, :competition_id
+  permit_params :image, :image_new, :name, :description, :aasm_state, :rejection_reason, :moderated_date, :user_id
   #
   # or
   #

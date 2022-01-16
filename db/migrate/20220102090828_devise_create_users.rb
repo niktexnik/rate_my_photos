@@ -7,6 +7,7 @@ class DeviseCreateUsers < ActiveRecord::Migration[6.1]
       ## for vk/facebook
       t.string :provider
       t.string :uid
+      t.string :image
       ## Database authenticatable
       t.string :email,              null: false, default: ""
       t.string :encrypted_password, null: false, default: ""
@@ -36,7 +37,7 @@ class DeviseCreateUsers < ActiveRecord::Migration[6.1]
       # t.string   :unlock_token # Only if unlock strategy is :email or :both
       # t.datetime :locked_at
 
-
+      t.boolean :moderator
       t.timestamps null: false
     end
 

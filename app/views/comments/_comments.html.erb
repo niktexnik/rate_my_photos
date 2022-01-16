@@ -1,4 +1,5 @@
-<%= form_with model:[@competition, @photo, @comment] do |form| %>
+<%if user_signed_in?%>
+<%= form_with model:[@photo, @comment] do |form| %>
 <h2>Add your comments:</h2>
 <div class="form-control">
   <div class="search">
@@ -10,3 +11,4 @@
     </div>
 </div>
 <% end %>
+<%end%>

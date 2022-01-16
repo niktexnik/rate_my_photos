@@ -8,15 +8,15 @@ default: &default
 
 development:
   <<: *default
-  database: rate_my_photos_development
+  database: rate_photos_development
 
 
 test:
   <<: *default
-  database: rate_my_photos_test
+  database: rate_photos_test
 
 production:
   <<: *default
-  database: rate_my_photos_production
-  username: rate_my_photos
+  database: rate_photos_production
+  username: postgress
   password: <%= ENV['RATE_MY_PHOTOS_DATABASE_PASSWORD'] %>

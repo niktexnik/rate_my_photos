@@ -1,6 +1,8 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    aasm (5.2.0)
+      concurrent-ruby (~> 1.0)
     actioncable (6.1.4.4)
       actionpack (= 6.1.4.4)
       activesupport (= 6.1.4.4)
@@ -74,6 +76,9 @@ GEM
       zeitwerk (~> 2.3)
     addressable (2.8.0)
       public_suffix (>= 2.0.2, < 5.0)
+    after_commit_everywhere (1.1.0)
+      activerecord (>= 4.2)
+      activesupport
     arbre (1.4.0)
       activesupport (>= 3.0.0, < 6.2)
       ruby2_keywords (>= 0.0.2, < 1.0)
@@ -116,6 +121,8 @@ GEM
       warden (~> 1.2.3)
     erubi (1.10.0)
     execjs (2.8.1)
+    faker (2.19.0)
+      i18n (>= 1.6, < 2)
     faraday (1.8.0)
       faraday-em_http (~> 1.0)
       faraday-em_synchrony (~> 1.0)
@@ -337,8 +344,10 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  aasm
   active_interaction (~> 4.1)
   activeadmin
+  after_commit_everywhere
   bcrypt (~> 3.1.7)
   bootsnap (>= 1.4.4)
   bootstrap-sass
@@ -346,6 +355,7 @@ DEPENDENCIES
   capybara (>= 3.26)
   carrierwave
   devise
+  faker
   jbuilder (~> 2.7)
   kaminari
   leaderboard

@@ -3,12 +3,28 @@ class CommentsController < ApplicationController
 
   def show; end
 
+  def edit
+    @comment = Comment.find(params[:id])
+  end
+
+  def update
+    @comment = Comment.find(params[:id])
+
+    if @comment.update(comment_params)
+      flash[:success] = 'Updated'
+      redirect_to preview_photo_url(@photo)
+    else
+      flash[:danger] = 'Not updated...'
+      render :edit
+    end
+  end
+
   def create
     @comment = @photo.comments.build(comment_params)
     @comment.user = current_user
     if @comment.save
       flash[:success] = 'Success'
-      redirect_to preview_competition_photo_url(@photo.competition, @photo)
+      redirect_to preview_photo_url(@photo)
     else
       flash[:danger] = 'Not created...'
       render 'photos/preview'
@@ -19,7 +35,7 @@ class CommentsController < ApplicationController
     @comment = @photo.comments.find(params[:id])
     @comment.destroy
     flash[:success] = 'Comment deleted!'
-    redirect_to @photo
+    redirect_to preview_photo_url(@photo)
   end
 
   private

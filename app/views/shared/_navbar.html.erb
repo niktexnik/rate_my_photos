@@ -7,26 +7,31 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <%if user_signed_in?%>
-        <li class="nav-item">
-          <%= link_to "Log out!", destroy_user_session_path, method: :delete, class: 'btn btn-inverse'%>
-        </li>
-         <li class="nav-item">
-          <%= link_to "Add photo", new_photo_path, class: 'btn btn-inverse'%>
-          <%= link_to "Your photos", photos_path, class: 'btn btn-inverse'%>
-        </li>
+          <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+              <%= current_user.email%>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+              <%= link_to "Add photo", new_photo_path, class: 'dropdown-item'%>
+              <%= link_to "Your photos", photos_path, class: 'dropdown-item'%>
+              <%= link_to "Edit profile", edit_user_registration_path, class: 'dropdown-item'%>
+              <%= link_to "Log out!", destroy_user_session_path, method: :delete, class: 'dropdown-item'%>
+            </ul>
+          </div>
+
         <%else%>
-        <li class="nav-item">
-          <%= link_to "Register", new_user_registration_path, class: "btn btn-inverse"%>
-        </li>
-        <li class="nav-item">
-          <%= link_to "Log in!", new_user_session_path, class: "btn btn-inverse"%>
-        </li>
+          <li class="nav-item">
+            <%= link_to "Register", new_user_registration_path, class: "btn btn-inverse"%>
+          </li>
+          <li class="nav-item">
+            <%= link_to "Log in!", new_user_session_path, class: "btn btn-inverse"%>
+          </li>
         <%end%>
       </ul>
-      <form class="d-flex">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
+        <form class="d-flex">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
     </div>
   </div>
 </nav>

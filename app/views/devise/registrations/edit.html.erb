@@ -1,7 +1,26 @@
 <h2>Edit <%= resource_name.to_s.humanize %></h2>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { multipart: true, method: :put }) do |f| %>
   <%= render "devise/shared/error_messages", resource: resource %>
+
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name, autofocus: true%>
+  </div>
+
+  <div class="field">
+    <%= f.label "image" %><br />
+    <%= f.file_field :image %>
+  </div>
+
+  <div class="col-md-4">
+    <p>Current image:</p>
+    <%if @user.image.present?%> 
+    <%= image_tag @user.image.url(:large), class: 'img-fluid rounded-start'%>
+    <%else%>
+    <h5>No image...</h5>
+    <%end%>
+  </div>
 
   <div class="field">
     <%= f.label :email %><br />
