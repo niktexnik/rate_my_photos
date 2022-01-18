@@ -1,5 +1,6 @@
 class CommentsController < ApplicationController
-  before_action :set_comments, :set_photo
+  before_action :set_comments, only: %i[edit update destory]
+  before_action :set_photo
 
   def show; end
 
