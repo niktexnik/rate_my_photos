@@ -1,14 +1,5 @@
-<div class="container">
-<% name = current_user.present? ? current_user.email : 'Anonimus'%>
-<%if current_user.nil?%>
-<h4>Welcome, <%=name %>! You can register and add photos. And also comment on the photos and like nice photos</h4>
-<%else%>
-<h3>Welcome, <%=name %> </h3>
-<%end%>
-<%= render 'shared/search'%>
-<h1>All photos: </h1><br>
-</div>
-  <%= paginate @photos %>
+
+<h1>Your photos: </h1><br>
 <% @photos.each do |photo| %>
   <div class="card-group">
       <div class="card mb-3">
@@ -18,15 +9,13 @@
           </div>
           <div class="col-md-8">
             <div class="card-body">
-              <h5 class="card-title"><%= link_to photo.name, preview_photo_url(photo) %></h5>
+              <h5 class="card-title"><%= link_to photo.name, collection_photo_path(current_user, photo) %></h5>
               <p class="card-text"><%=photo.description%></p>
               <p class="card-text"><small class="text-muted">Last updated: <%=photo.created_at%></small></p>
               <p class="card-text"><small class="text-muted">Comments: <%=photo.comments_count%>  /  Likes: <%=photo.likes_count%></small></p>
-              <p class="card-text"><small class="text-muted">Author: <%=photo.user.name%></small></p>
             </div>
           </div>
         </div>
       </div>
   </div>
 <%end%>
-<%= paginate @photos %>

@@ -21,10 +21,6 @@ class LikesController < ApplicationController
 
   private
 
-  # def like_params
-  #   params.require(:like).permit(:likes_count)
-  # end
-
   def set_like
     @photo = Photo.find(params[:photo_id])
   end

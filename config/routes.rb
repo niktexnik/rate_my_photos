@@ -10,4 +10,7 @@ Rails.application.routes.draw do
     resources :comments, only: %i[create destroy edit update]
     resources :likes, only: %i[create destroy]
   end
+  resources :collections do
+    resources :photos
+  end
 end

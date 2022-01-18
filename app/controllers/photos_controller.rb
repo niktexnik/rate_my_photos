@@ -1,14 +1,18 @@
 class PhotosController < ApplicationController
+  include PhotosHelper
+  before_action :set_photo, only: %i[edit update destroy preview]
   before_action :logged_in_user, only: %i[edit update destroy show]
   before_action :correct_user, only: %i[edit update destroy show]
   before_action :moderator_user, only: :destroy
+
   def index
     # @photos = Photo.page(params[:page])
-    @photos = Photo.published.page(params[:page])
+    # @photos = Photo.published.page(params[:page])
+    @q = Photo.ransack(params[:q])
+    @photos = @q.result.published.page(params[:page])
   end
 
   def show
-    @photo = Photo.find(params[:id])
     @comment = @photo.comments.build
     @comments = @photo.comments.all.includes(:user)
   end
@@ -30,13 +34,9 @@ class PhotosController < ApplicationController
     end
   end
 
-  def edit
-    @photo = Photo.find(params[:id])
-  end
+  def edit; end
 
   def update
-    @photo = Photo.find(params[:id])
-
     if @photo.update(photo_params)
       flash[:success] = 'Updated'
       redirect_to @photo
@@ -48,45 +48,20 @@ class PhotosController < ApplicationController
   end
 
   def destroy
-    @photo = Photo.find(params[:id])
     @photo.destroy
     flash[:success] = 'Deleted Success'
     redirect_to root_path
   end
 
   def preview
-    @photo = Photo.find(params[:id])
     @comment = @photo.comments.build
     @comments = @photo.comments.all.includes(:user)
   end
 
   private
 
-  def logged_in_user
-    unless signed_in?
-      store_location
-      flash[:danger] = 'Please log in.'
-      redirect_to user_session_path
-    end
-  end
-
-  def correct_user
+  def set_photo
     @photo = Photo.find(params[:id])
-    @user = @photo.user_id
-    redirect_to(root_url) unless @user == current_user.id
-  end
-
-  def redirect_back_or(default)
-    redirect_to(session[:forwarding_url] || default)
-    session.delete(:forwarding_url)
-  end
-
-  def store_location
-    session[:forwarding_url] = request.url if request.get?
-  end
-
-  def moderator_user
-    redirect_to(root_url) unless current_user.moderator?
   end
 
   def photo_params

@@ -1,15 +1,11 @@
 class CommentsController < ApplicationController
-  before_action :set_comments
+  before_action :set_comments, :set_photo
 
   def show; end
 
-  def edit
-    @comment = Comment.find(params[:id])
-  end
+  def edit; end
 
   def update
-    @comment = Comment.find(params[:id])
-
     if @comment.update(comment_params)
       flash[:success] = 'Updated'
       redirect_to preview_photo_url(@photo)
@@ -40,8 +36,12 @@ class CommentsController < ApplicationController
 
   private
 
-  def set_comments
+  def set_photo
     @photo = Photo.find(params[:photo_id])
+  end
+
+  def set_comments
+    @comment = Comment.find(params[:id])
   end
 
   def comment_params
