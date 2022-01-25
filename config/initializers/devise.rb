@@ -302,8 +302,8 @@ Devise.setup do |config|
   # ActiveSupport.on_load(:devise_failure_app) do
   #   include Turbolinks::Controller
   # end
-  config.omniauth :facebook, "APP_ID", "APP_SECRET"
-  config.omniauth :vkontakte, "APP_ID", "APP_SECRET"
+  config.omniauth :facebook, "1963592417178856", "07d9e74734ffdd5698f30f379af35674"
+  config.omniauth :vkontakte, "m2IzokUgD9K73imq5zh8", "8d3d718c8d3d718c8d3d718c2d8d47859488d3d8d3d718cecd651b78ef88be1dbf22d41"
 
   # ==> Configuration for :registerable
 

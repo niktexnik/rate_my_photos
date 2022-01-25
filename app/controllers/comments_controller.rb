@@ -1,6 +1,8 @@
 class CommentsController < ApplicationController
-  before_action :set_comments, only: %i[edit update destory]
-  before_action :set_photo
+  before_action :set_commentable
+  before_action :set_comment, except: :create
+  before_action :authorize_comment!
+  after_action :verify_authorized
 
   def show; end
 
@@ -9,7 +11,7 @@ class CommentsController < ApplicationController
   def update
     if @comment.update(comment_params)
       flash[:success] = 'Updated'
-      redirect_to preview_photo_url(@photo)
+      redirect_to preview_photo_url(@commentable)
     else
       flash[:danger] = 'Not updated...'
       render :edit
@@ -17,11 +19,11 @@ class CommentsController < ApplicationController
   end
 
   def create
-    @comment = @photo.comments.build(comment_params)
+    @comment = @commentable.comments.build(comment_params)
     @comment.user = current_user
     if @comment.save
       flash[:success] = 'Success'
-      redirect_to preview_photo_url(@photo)
+      redirect_back fallback_location: '/'
     else
       flash[:danger] = 'Not created...'
       render 'photos/preview'
@@ -29,23 +31,32 @@ class CommentsController < ApplicationController
   end
 
   def destroy
-    @comment = @photo.comments.find(params[:id])
+    @comment = @commentable.comments.find(params[:id])
     @comment.destroy
     flash[:success] = 'Comment deleted!'
-    redirect_to preview_photo_url(@photo)
+    redirect_back fallback_location: '/'
   end
 
   private
 
-  def set_photo
-    @photo = Photo.find(params[:photo_id])
+  def comment_params
+    params.require(:comment).permit(:body)
   end
 
-  def set_comments
+  def set_commentable
+    @commentable =
+      if params[:photo_id].present?
+        Photo.find(params[:photo_id])
+      elsif params[:comment_id].present?
+        Comment.find(params[:comment_id])
+      end
+  end
+
+  def set_comment
     @comment = Comment.find(params[:id])
   end
 
-  def comment_params
-    params.require(:comment).permit(:body)
+  def authorize_comment!
+    authorize(@comment || Comment)
   end
 end

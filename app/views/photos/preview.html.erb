@@ -2,40 +2,18 @@
 
 <div class="card mb-3">
   <div class="row g-0">
-      <%= image_tag @photo.image.url(:large), class: 'img-fluid rounded-start'%>
-    <div>
-      <div class="card-body">
-        <p class="card-text"><%=@photo.description%></p>
-        <p class="card-text"><small class="text-muted">Last updated <%=@photo.created_at%></small></p>
-        <div><%=@photo.likes.count %> <%= (@photo.likes.count) == 1 ? 'Like' : 'Likes'%></p>  <%=render "likes/likes"%></div>
-      </div>
-    </div>
+    <%= image_tag @photo.image.url(:large), class: 'img-fluid rounded-start'%>
   </div>
-  	<div class="btn-group mt-5 mb-5">
+  <div class="card-body">
+    <p class="card-text"><%=@photo.description%></p>
+    <p class="card-text"><small class="text-muted">Last updated <%=@photo.created_at%></small></p>
+    <%=@photo.likes.count %> <%= (@photo.likes.count) == 1 ? 'Like' : 'Likes'%></p>  <%=render "likes/likes"%>
+  </div>
+  	<div class="btn-group mt-2 mb-2">
 		  <%= link_to "Back", root_path, class: 'btn btn-warning'%>
     </div>
-
-    <h2>Comments:</h2>
-    <%@comments.each do |comment|%>
-      <div class="media-body mt-5">
-        <%if comment.user.image.present?%> 
-          <%= image_tag comment.user.image.url(:thumb), class: 'img-circle'%>
-        <%else%>
-          <p> No image...</p>
-        <%end%>
-        <div class="mar-btm">
-          <a href="#" class="btn-link text-semibold media-heading box-inline"><%=comment.user.email%></a>
-          <p><%=comment.body%></p>
-          <p class="text-muted text-sm"><i class="fa fa-mobile fa-lg"></i> <%=comment.created_at%> </p>
-      </div>
-      <%if current_user.id == comment.user.id || current_user.moderator?%>
-      <div class='btn-group mb-5'>
-        <%= link_to "Delete", photo_comment_path(@photo, comment), data: { method: :delete, confirm: "Are you shure" }, class: "btn btn-danger" %>
-        <%= link_to "Edit", edit_photo_comment_path(@photo, comment), class: "btn btn-warning" %>
-      </div>
-      <%end%>
+    <div class='container'>
+      <%=render partial: "comments/commentaries", locals: {comments: @comments, commentable: @photo}%>
+      <%=render partial: "comments/form", locals: {commentable: @photo }%>
     </div>
-    <%end%>
-    </div>
-    <%=render "comments/comments"%>
 </div>

@@ -13,7 +13,7 @@ ActiveAdmin.register Photo do
 
   # Uncomment all parameters which should be permitted for assignment
   #
-  permit_params :image, :image_new, :name, :description, :aasm_state, :rejection_reason, :moderated_date, :user_id
+  permit_params :image, :image_new, :name, :description, :status, :rejection_reason, :moderated_date, :user_id
   #
   # or
   #

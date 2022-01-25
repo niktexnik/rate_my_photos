@@ -1,7 +1,5 @@
-<div>
-  <%= search_form_for @q do |f| %>
+  <%= form_for :q, method: :get, url: photos_url do |f| %>
     <%= f.label :Search %>
-    <%= f.search_field :name_cont %>
-    <%= f.submit %>
+    <%= f.search_field :search%>
+    <%= f.submit "Search"%>
   <% end %>
-</div>
