@@ -31,7 +31,6 @@ class CommentsController < ApplicationController
   end
 
   def destroy
-    @comment = @commentable.comments.find(params[:id])
     @comment.destroy
     flash[:success] = 'Comment deleted!'
     redirect_back fallback_location: '/'
@@ -40,7 +39,7 @@ class CommentsController < ApplicationController
   private
 
   def comment_params
-    params.require(:comment).permit(:body)
+    params.require(:comment).permit(:body, :photo_id)
   end
 
   def set_commentable

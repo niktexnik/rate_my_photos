@@ -24,4 +24,9 @@ Rails.application.routes.draw do
     resources :photos
   end
 
+  namespace :api do
+    resources :photos
+    resources :users
+    resources :comments
+  end
 end

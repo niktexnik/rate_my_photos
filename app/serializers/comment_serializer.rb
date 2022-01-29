@@ -20,20 +20,7 @@
 #
 #  fk_rails_...  (user_id => users.id)
 #
-class Comment < ApplicationRecord
-  include Commentable
-
-  belongs_to :commentable, polymorphic: true
-  belongs_to :user
-  belongs_to :photo
-
-  after_create do
-    Photo.increment_counter(:comments_count, photo_id)
-  end
-
-  after_destroy do
-    Photo.decrement_counter(:comments_count, photo_id)
-  end
-
-  validates :body, presence: true, length: { minimum: 1, maximum: 4000 }
+class CommentSerializer < ApplicationSerializer
+  attributes :id, :body
+  has_many :comments
 end

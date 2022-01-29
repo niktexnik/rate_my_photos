@@ -25,10 +25,11 @@ gem 'activeadmin'
 gem 'active_interaction', '~> 4.1'
 
 # database
-gem 'pg', '~> 1.1'
 gem 'counter_culture'
+gem 'pg', '~> 1.1'
 
 # model
+gem 'active_model_serializers'
 gem 'annotate'
 
 gem 'webpacker', '~> 5.0'

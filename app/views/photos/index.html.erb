@@ -1,11 +1,11 @@
 <div class='mb-2 col-md-4'> <%= render 'shared/search'%> </div>
 <p>Sort by: 
-<%= link_to "Date(up)", photos_url(order: 'yearU') %>,
-<%= link_to "Date(down)", photos_url(order: 'yearD') %>,
-<%= link_to "Likes(up)", photos_url(order: 'likesU') %>,
-<%= link_to "Likes(down)", photos_url(order: 'likesD') %>,
-<%= link_to "Comments(up)", photos_url(order: 'commentsU') %>,
-<%= link_to "Comments(down)", photos_url(order: 'commentsD') %>
+<%= link_to "Date(up)", photos_url(order: :created_at,  direction: 'desc') %>,
+<%= link_to "Date(down)", photos_url(order: :created_at, direction: 'asc') %>,
+<%= link_to "Likes(up)", photos_url(order: :likes_count, direction: 'desc') %>,
+<%= link_to "Likes(down)", photos_url(order: :likes_count, direction: 'asc') %>,
+<%= link_to "Comments(up)", photos_url(order: :comments_count, direction: 'desc') %>,
+<%= link_to "Comments(down)", photos_url(order: :comments_count, direction: 'asc') %>
 </p>
   <%= paginate @photos %>
     <div class="card-group">

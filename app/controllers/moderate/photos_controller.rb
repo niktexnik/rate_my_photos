@@ -13,7 +13,7 @@ class Moderate::PhotosController < ApplicationController
     elsif params[:order] == 'pending'
       @photos = Photo.pending
     end
-      @photos = @photos.page(params[:page])
+    @photos = @photos.page(params[:page])
   end
 
   def show; end
@@ -44,5 +44,4 @@ class Moderate::PhotosController < ApplicationController
   def authorize_photo!
     authorize(@photo || Photo)
   end
-
 end

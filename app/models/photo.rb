@@ -31,26 +31,21 @@ class Photo < ApplicationRecord
   paginates_per 4
 
   mount_uploader :image, ImageUploader
+  mount_uploader :image_new, ImageUploader
 
   belongs_to :user
   has_many :likes, dependent: :destroy
 
   validates :name, :description, :image, presence: true
 
-  # moderator
   scope :published, -> { where(status: :published) }
   scope :pending, -> { where(status: :pending) }
   scope :rejected, -> { where(status: :rejected) }
+  scope :ordered_by, (lambda do |field_name, direction|
+    return unless field_name.to_s.in?(column_names) && direction.to_s.downcase.in?(%w[asc desc])
 
-  # all users
-  scope :ordered_by_likes_asc, -> { order(likes_count: :asc) }
-  scope :ordered_by_likes_desc, -> { order(likes_count: :desc) }
-
-  scope :ordered_by_comments_asc, -> { order(comments_count: :asc) }
-  scope :ordered_by_comments_desc, -> { order(comments_count: :desc) }
-
-  scope :ordered_by_date_asc, -> { order(created_at: :asc) }
-  scope :ordered_by_date_desc, -> { order(created_at: :desc) }
+    order(field_name => direction)
+  end)
 
   # AASM config
   aasm column: :status do
