@@ -35,5 +35,7 @@ class Comment < ApplicationRecord
     Photo.decrement_counter(:comments_count, photo_id)
   end
 
+  # CommentNotification.with(photo: @photo).deliver_later(current_user)
+
   validates :body, presence: true, length: { minimum: 1, maximum: 4000 }
 end

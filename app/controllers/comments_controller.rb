@@ -23,6 +23,12 @@ class CommentsController < ApplicationController
     @comment.user = current_user
     if @comment.save
       flash[:success] = 'Success'
+      CommentNotification.with(photo: @commentable).deliver(current_user) if @commentable.is_a?(Photo)
+      WebNotificationsChannel.broadcast_to(
+        current_user,
+        title: 'New things!',
+        body: 'All the news fit to print'
+      )
       redirect_back fallback_location: '/'
     else
       flash[:danger] = 'Not created...'

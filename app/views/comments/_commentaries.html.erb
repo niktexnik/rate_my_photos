@@ -2,7 +2,7 @@
     <%comments.each do |comment|%>
       <div class="container-fluid">
         <%if comment.user.image.present?%> 
-            <%= image_tag comment.user.image.url(:thumb), class: 'img-fluid img-thumbnail'%>
+            <%= image_tag comment.user.image.url(:avatar), class: 'img-fluid img-thumbnail'%>
         <%else%>
             <p> No image...</p>
         <%end%>

@@ -5,10 +5,13 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <ul class="navbar-nav ms-auto">
         <%if user_signed_in?%>
           <li class="nav-item">
             <%= link_to "Cabinet", users_photos_path, class: 'nav-link'%>
+          </li>
+           <li class="nav-item">
+            <%= link_to "Notifications #{current_user.notifications.unread.count}", notifications_path, class: 'nav-link'%>
           </li>
           <li class="nav-item">
             <%= link_to "MODERATE", moderate_photos_url, class: 'nav-link' if current_user.moderator?%>
