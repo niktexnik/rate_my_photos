@@ -1,8 +1,0 @@
-<h1>Notifications</h1>
-<%# <%= render @notifications %>
-
-<% @notifications.each do |notification| %>
-  <div class='p-4'>
-    <%=link_to notification.to_notification.message, notification.to_notification.url%>
-  </div>
-<% end %>

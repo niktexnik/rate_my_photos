@@ -1,32 +1,41 @@
 <div class='comtainer'> <%= render 'shared/search'%> 
 <p class='text-right'>Sort by: |
-<%= link_to "Date(up)", photos_url(order: :created_at,  direction: 'desc') %> |
-<%= link_to "Date(down)", photos_url(order: :created_at, direction: 'asc') %> |
-<%= link_to "Likes(up)", photos_url(order: :likes_count, direction: 'desc') %> |
-<%= link_to "Likes(down)", photos_url(order: :likes_count, direction: 'asc') %> |
-<%= link_to "Comments(up)", photos_url(order: :comments_count, direction: 'desc') %> |
-<%= link_to "Comments(down)", photos_url(order: :comments_count, direction: 'asc') %> |
+<%= link_to "Date ⬆", photos_url(order: :created_at, direction: 'asc'), title: 'Order asc' %> |
+<%= link_to "Date ⬇", photos_url(order: :created_at,  direction: 'desc'), title: 'Order desc' %> |
+<%= link_to "Likes⬆", photos_url(order: :likes_count, direction: 'asc'), title: 'Order asc' %> |
+<%= link_to "Likes⬇", photos_url(order: :likes_count, direction: 'desc'), title: 'Order desc' %> |
+<%= link_to "Comments⬆", photos_url(order: :comments_count, direction: 'asc'), title: 'Order asc' %> |
+<%= link_to "Comments⬇", photos_url(order: :comments_count, direction: 'desc'), title: 'Order desc' %> |
 </p>
 </div>
   <%= paginate @photos %>
-    <div class="card-group">
+  <div class="album py-5 bg-light">
+    <div class="container">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-2">
       <% @photos.each do |photo| %>
-          <div class="card mb-3">
-            <div class="row g-0">
-              <div class="md-4">
-                <%= image_tag photo.image.url(:thumb), class: 'rounded mx-auto d-block mt-2'%>
-              </div>
-              <div class="col-md-8">
-                <div class="card-body">
-                  <h5 class="card-title"><%= link_to photo.name, preview_photo_url(photo) %></h5>
-                  <p class="card-text"></p>
-                  <p class="card-text"><small class="text-muted">Last updated: <%=photo.created_at%></small></p>
-                  <p class="card-text"><small class="text-muted">Comments: <%=photo.comments_count%>  /  Likes: <%=photo.likes_count%></small></p>
-                  <p class="card-text"><small class="text-muted">Author: <%=photo.user.name%></small></p>
+        <div class="col">
+          <div class="card shadow-sm">
+            <p class="card-title text-center mt-1"><%=photo.name%></p>
+              <%= image_tag photo.image.url(:thumb), class: 'rounded mx-auto d-block mt-2'%>
+              <div class="card-body">
+                <p class="card-text"><small class="text-muted">Description: <%=photo.description%></small></p>
+                <p class="card-text"><small class="text-muted">Comments: <%=photo.comments_count%>  /  Likes: <%=photo.likes_count%></small></p>
+                <p class="card-text"><small class="text-muted">Author: <%=photo.user.name%></small></p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    <%= link_to "View", preview_photo_path(photo), class: 'btn btn-sm btn-outline-secondary' %>
+                  </div>
+                  <p class="card-text"><small class="text-muted"><%= time_ago_in_words(photo.created_at)%> ago</small></p>
+                  <%like = photo.likes.find_by(user: current_user)%>
+                  <div id='likeForm'>
+                    <%=render partial: 'likes/likes', locals: {photo: photo, like: like}%>
+                  </div>
                 </div>
               </div>
-            </div>
           </div>
+        </div>
       <%end%>
+      </div>
     </div>
+  </div>
   <%= paginate @photos %>

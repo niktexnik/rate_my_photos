@@ -1,10 +1,11 @@
-<form>
+<%= photo.likes_count %>
+<%= puts "FR0M PARTIAL=========PHOTO____#{photo}, LIKE____#{like}" %>
 <%if user_signed_in?%>
-  <% pre_like = @photo.likes.find { |like| like.user_id == current_user.id} %>
-    <% if pre_like %>
-      <%= link_to 'Unlike', photo_like_path(@photo, pre_like), method: :delete, class: "btn btn-danger"%>
-    <% else %>
-      <%= link_to 'Like', photo_likes_path(@photo), method: :post, class: "btn btn-success" %>
-    <% end %>
+  <% if like&.persisted? %>
+    <%= link_to '❤', photo_like_path(photo, like), class: "btn btn-clean", id: "btnUnlike" %>
+  <%else%>
+    <%= form_with url: photo_likes_path(photo), id: 'form', html: {style: "display:inline;"}  do |form| %>
+      <%=form.submit "🤍", class:'btn btn-clean', id: 'btnLike' %>
+    <%end%> 
+  <%end%>
 <%end%>
-</form>

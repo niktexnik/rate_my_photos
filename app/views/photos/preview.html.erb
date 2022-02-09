@@ -1,13 +1,16 @@
 <h2><%= @photo.name %></h2>
-
+<%= puts "FROM PREVIEW==================PHOTO++++#{@photo}, LIKE++++#{@like}" %>
 <div class="card mb-3">
   <div class="row g-0">
     <%= image_tag @photo.image.url(:large), class: 'img-fluid rounded-start'%>
   </div>
   <div class="card-body">
     <p class="card-text"><%=@photo.description%></p>
-    <p class="card-text"><small class="text-muted">Last updated <%=@photo.created_at%></small></p>
-    <%=@photo.likes.count %> <%= (@photo.likes.count) == 1 ? 'Like' : 'Likes'%></p>  <%=render "likes/likes"%>
+    <p class="card-text"><small class="text-muted">Last updated <%=time_ago_in_words(@photo.updated_at)%></small></p>
+    <%# <div role=<%= "like"%>> 
+    <div id='likeForm'>
+      <%=render partial: 'likes/likes', locals: {photo: @photo, like: @like}%>
+    </div>
   </div>
   	<div class="btn-group mt-2 mb-2">
 		  <%= link_to "Back", root_path, class: 'btn btn-warning'%>

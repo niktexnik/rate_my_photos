@@ -22,9 +22,10 @@
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
 #
 class User < ApplicationRecord
+  has_one :admin_user
+
   has_many :photos, dependent: :destroy
   has_many :likes, dependent: :destroy
-  has_many :notifications, as: :recipient
   mount_uploader :image, ImageUploader
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable

@@ -4,12 +4,12 @@
 #
 #  id               :bigint           not null, primary key
 #  comments_count   :integer          default(0), not null
-#  description      :text
+#  description      :text             not null
 #  image            :string
 #  image_new        :string
 #  likes_count      :integer          default(0), not null
 #  moderated_date   :date
-#  name             :string
+#  name             :string           not null
 #  rejection_reason :text
 #  status           :string
 #  created_at       :datetime         not null
@@ -46,6 +46,8 @@ class Photo < ApplicationRecord
 
     order(field_name => direction)
   end)
+
+  scope :filter_by, ->(search) { where('name ILIKE :search or description ILIKE :search', search: "%#{search}%") }
 
   # AASM config
   aasm column: :status do

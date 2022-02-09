@@ -1,5 +1,6 @@
 class Users::PhotosController < ApplicationController
   include PhotosHelper
+  skip_before_action :verify_authenticity_token
   before_action :authenticate_user!, except: %i[index preview]
   before_action :set_photo, only: %i[edit update destroy preview show]
   before_action :authorize_photo!
@@ -11,6 +12,10 @@ class Users::PhotosController < ApplicationController
       @photos = @photos.where('name ILIKE :search or description ILIKE :search', search: "%#{params.dig(:q, :search)}%")
     end
     @photos = @photos.page(params[:page])
+    respond_to do |format|
+      format.js { render partial: 'photos' }
+      format.html
+    end
   end
 
   def show
@@ -33,13 +38,22 @@ class Users::PhotosController < ApplicationController
     end
   end
 
-  def edit; end
+  def edit
+    respond_to do |format|
+      format.js { render partial: 'form' }
+      format.html
+    end
+  end
 
   def update
     @photo = UpdatePhotoService.call(photo_params, @photo)
     if @photo
-      flash[:success] = 'Success'
-      redirect_to users_photo_url(@photo)
+    respond_to do |format|
+      format.js { render partial: 'form' }
+      format.html { redirect_to users_photo_url(@photo), notice: 'success' }
+    end
+      # flash[:success] = 'Success'
+      # redirect_to users_photo_url(@photo)
     else
       flash[:danger] = 'Not created...'
       render :edit
@@ -48,8 +62,12 @@ class Users::PhotosController < ApplicationController
 
   def destroy
     @photo.destroy
-    flash[:success] = 'Deleted Success'
-    redirect_to users_photos_url
+    respond_to do |format|
+      format.js { render partial: 'photos' }
+      format.html { redirect_to users_photos_url, notice: 'Deleted Success' }
+    end
+    # flash[:success] = 'Deleted Success'
+    # redirect_to users_photos_url
   end
 
   private

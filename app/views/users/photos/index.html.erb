@@ -1,26 +1,9 @@
-  <div class='btn-group mb-3'>
-    <%= link_to "Add photo", new_users_photo_path, class: 'btn btn-success'%>
-    <%= link_to "Edit profile", edit_user_registration_path, class: 'btn btn-warning'%>
+<h1>Personal cabinet: </h1>
+  <div class='mb-3'>
+    <%= link_to "Add photo", new_users_photo_path, class: 'btn btn-success', id: "add" %>
+    <%= link_to "Edit profile", edit_user_registration_path, class: 'btn btn-warning' %>
+    <%= link_to "Show my photos", users_photos_path, class: 'btn btn-warning', id: "show"%>
+    <%= link_to "Generate API key", "#", class: 'btn btn-warning'%>
   </div>
-  <%= paginate @photos %>
-    <div class="card-group">
-      <% @photos.each do |photo| %>
-          <div class="card mb-3">
-            <div class="row g-0">
-              <div class="md-4">
-                <%= image_tag photo.image.url(:thumb), class: 'img-thumbnail'%>
-              </div>
-              <div class="col-md-8">
-                <div class="card-body">
-                  <h5 class="card-title"><%= link_to photo.name, users_photo_url(photo) %></h5>
-                  <p class="card-text"><%=photo.description%></p>
-                  <p class="card-text"><small class="text-muted">Last updated: <%=photo.created_at%></small></p>
-                  <p class="card-text"><small class="text-muted">Comments: <%=photo.comments_count%>  /  Likes: <%=photo.likes_count%></small></p>
-                  <p class="card-text"><small class="text-muted">Author: <%=photo.user.name%></small></p>
-                </div>
-              </div>
-            </div>
-          </div>
-      <%end%>
-    </div>
-  <%= paginate @photos %>
+  <div id="photos">
+  </div>

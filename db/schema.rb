@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_30_132223) do
+ActiveRecord::Schema.define(version: 2022_02_07_172719) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,12 +37,14 @@ ActiveRecord::Schema.define(version: 2022_01_30_132223) do
     t.datetime "remember_created_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "user_id"
     t.index ["email"], name: "index_admin_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
+    t.index ["user_id"], name: "index_admin_users_on_user_id"
   end
 
   create_table "comments", force: :cascade do |t|
-    t.string "body"
+    t.string "body", null: false
     t.string "commentable_type", null: false
     t.bigint "commentable_id", null: false
     t.bigint "user_id", null: false
@@ -62,23 +64,11 @@ ActiveRecord::Schema.define(version: 2022_01_30_132223) do
     t.index ["user_id"], name: "index_likes_on_user_id"
   end
 
-  create_table "notifications", force: :cascade do |t|
-    t.string "recipient_type", null: false
-    t.bigint "recipient_id", null: false
-    t.string "type", null: false
-    t.jsonb "params"
-    t.datetime "read_at"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["read_at"], name: "index_notifications_on_read_at"
-    t.index ["recipient_type", "recipient_id"], name: "index_notifications_on_recipient"
-  end
-
   create_table "photos", force: :cascade do |t|
     t.string "image"
     t.string "image_new"
-    t.string "name"
-    t.text "description"
+    t.string "name", null: false
+    t.text "description", null: false
     t.string "status"
     t.text "rejection_reason"
     t.date "moderated_date"
@@ -107,6 +97,7 @@ ActiveRecord::Schema.define(version: 2022_01_30_132223) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "admin_users", "users"
   add_foreign_key "comments", "users"
   add_foreign_key "likes", "photos"
   add_foreign_key "likes", "users"

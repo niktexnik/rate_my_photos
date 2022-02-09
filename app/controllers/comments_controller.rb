@@ -24,11 +24,6 @@ class CommentsController < ApplicationController
     if @comment.save
       flash[:success] = 'Success'
       CommentNotification.with(photo: @commentable).deliver(current_user) if @commentable.is_a?(Photo)
-      WebNotificationsChannel.broadcast_to(
-        current_user,
-        title: 'New things!',
-        body: 'All the news fit to print'
-      )
       redirect_back fallback_location: '/'
     else
       flash[:danger] = 'Not created...'
@@ -38,8 +33,10 @@ class CommentsController < ApplicationController
 
   def destroy
     @comment.destroy
-    flash[:success] = 'Comment deleted!'
-    redirect_back fallback_location: '/'
+    respond_to do |format|
+      format.js
+      format.html { redirect_back fallback_location: '/', notice: 'Comment deleted!' }
+    end
   end
 
   private
