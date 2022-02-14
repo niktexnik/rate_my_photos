@@ -10,7 +10,7 @@ import "channels"
 import '../js/bootstrap_js_files.js'
 import '../stylesheets/application.scss'
 import 'bootstrap'
-import './likes'
+import './likes_v2'
 import './cabinet'
 require("../stylesheets/application.scss")
 

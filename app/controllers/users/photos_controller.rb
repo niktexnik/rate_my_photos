@@ -25,22 +25,39 @@ class Users::PhotosController < ApplicationController
 
   def new
     @photo = current_user.photos.build
+    respond_to do |format|
+      format.js { render :new }
+      format.html
+    end
   end
+
+  # def create
+  #   @photo = CreatePhotoService.call(photo_params, current_user)
+  #   if @photo.valid?
+  #     flash[:success] = 'Success'
+  #     redirect_to users_photo_url(@photo)
+  #   else
+  #     flash[:danger] = 'Not created...'
+  #     render :new
+  #   end
+  # end
 
   def create
     @photo = CreatePhotoService.call(photo_params, current_user)
-    if @photo.valid?
-      flash[:success] = 'Success'
-      redirect_to users_photo_url(@photo)
-    else
-      flash[:danger] = 'Not created...'
-      render :new
+    respond_to do |format|
+      if @photo.valid?
+        format.js { render :new}
+        format.html {redirect_to users_photo_url(@photo), notice: 'Success'}
+      else
+        format.js { render :new }
+        format.html { render :new, notice: 'Not created...' }
+      end
     end
   end
 
   def edit
     respond_to do |format|
-      format.js { render partial: 'form' }
+      format.js { render :edit }
       format.html
     end
   end
@@ -48,10 +65,10 @@ class Users::PhotosController < ApplicationController
   def update
     @photo = UpdatePhotoService.call(photo_params, @photo)
     if @photo
-    respond_to do |format|
-      format.js { render partial: 'form' }
-      format.html { redirect_to users_photo_url(@photo), notice: 'success' }
-    end
+      respond_to do |format|
+        format.js { render :edit }
+        format.html { redirect_to users_photo_url(@photo), notice: 'success' }
+      end
       # flash[:success] = 'Success'
       # redirect_to users_photo_url(@photo)
     else
@@ -61,7 +78,9 @@ class Users::PhotosController < ApplicationController
   end
 
   def destroy
-    @photo.destroy
+    @photos = current_user.photos.all
+    # @photo.destroy
+    DestroyPhoto.run!(photo: @photo)
     respond_to do |format|
       format.js { render partial: 'photos' }
       format.html { redirect_to users_photos_url, notice: 'Deleted Success' }

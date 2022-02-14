@@ -1,12 +1,11 @@
 const initJs = function () {
   console.log('initJs ready...');
-  const btnLike = document.querySelectorAll('#btnLike'),
-    btnUnlike = document.querySelectorAll('#btnUnlike'),
-    likeForm = document.querySelector("#likeForm");
+  const btnLike = document.querySelectorAll('#btnLike');
+  const btnUnlike = document.querySelectorAll('#btnUnlike');
+  const likeForm = document.querySelector("#likeForm");
 
   console.dir(btnLike)
   console.dir(btnUnlike)
-
 
   function unlikeHandler(e) {
     e.target.style = "pointer-events:none;";
