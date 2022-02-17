@@ -7,7 +7,7 @@ class LikesController < ApplicationController
     if @like.save
       respond_to do |format|
         format.js { render partial: 'likes/likes', locals: { photo: @photo, like: @like } }
-        format.html { redirect_to preview_photo_url(resource_photo), notice: 'Liked!' }
+        format.html { redirect_to preview_photo_url(@photo), notice: 'Liked!' }
       end
     else
       flash[:danger] = 'Error...'
@@ -20,7 +20,7 @@ class LikesController < ApplicationController
     @like.destroy
     respond_to do |format|
       format.js { render partial: 'likes/likes', locals: { photo: @photo, like: @like } }
-      format.html { redirect_to preview_photo_url(resource_photo), notice: 'Like deleted!' }
+      format.html { redirect_to preview_photo_url(@photo), notice: 'Like deleted!' }
     end
   end
 

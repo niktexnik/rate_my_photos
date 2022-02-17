@@ -30,5 +30,5 @@ Rails.application.routes.draw do
     resources :comments
   end
 
-  resources :notifications
+  put 'users/updatekey', to: 'users#update_key'
 end

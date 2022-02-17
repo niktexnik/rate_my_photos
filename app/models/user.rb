@@ -3,6 +3,7 @@
 # Table name: users
 #
 #  id                     :bigint           not null, primary key
+#  api_key                :string
 #  email                  :string           default(""), not null
 #  encrypted_password     :string           default(""), not null
 #  image                  :string
@@ -34,6 +35,9 @@ class User < ApplicationRecord
 
   devise :omniauthable, omniauth_providers: %i[facebook vkontakte]
 
+  before_create :set_api_key
+  before_update :set_api_key
+
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
       user.email = auth.info.email
@@ -52,5 +56,15 @@ class User < ApplicationRecord
         user.email = data['email'] if user.email.blank?
       end
     end
+  end
+
+  def set_api_key
+    self.api_key = generate_api_key
+  end
+
+  private
+
+  def generate_api_key
+    SecureRandom.base58(24)
   end
 end

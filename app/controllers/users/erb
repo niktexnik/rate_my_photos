@@ -21,51 +21,41 @@ class Users::PhotosController < ApplicationController
   def show
     @comment = @photo.comments.build
     @comments = @photo.comments.all.includes(:user)
-    respond_to do |format|
-      format.js { render :show }
-      format.html
-    end
   end
 
   def new
-    @photo = CreatePhoto.new
-    # @photo = current_user.photos.build
+    @photo = current_user.photos.build
     respond_to do |format|
       format.js { render :new }
       format.html
     end
   end
 
-  def create
-    @photo = CreatePhoto.run(params.fetch(:photo, {}).merge(user: current_user))
-    respond_to do |format|
-      if @photo.valid?
-        format.js { render partial: 'photos', notice: 'Success' }
-        format.html { redirect_to users_photo_url(@photo.result), notice: 'Success' }
-      else
-        format.js { render :new }
-        format.html { render :new, notice: 'Not created...' }
-      end
-    end
-  end
   # def create
-  #   @photo = CreatePhoto.run(params.fetch(:photo, {}).merge(user: current_user))
+  #   @photo = CreatePhotoService.call(photo_params, current_user)
   #   if @photo.valid?
   #     flash[:success] = 'Success'
-  #     redirect_to users_photo_url(@photo.result)
+  #     redirect_to users_photo_url(@photo)
   #   else
   #     flash[:danger] = 'Not created...'
   #     render :new
   #   end
   # end
 
+  def create
+    @photo = CreatePhotoService.call(photo_params, current_user)
+    respond_to do |format|
+      if @photo.valid?
+        format.js { render partial: 'photos', notice: 'Success'}
+        format.html {redirect_to users_photo_url(@photo), notice: 'Success'}
+      else
+        format.js { render :new }
+        format.html { render :new, notice: 'Not created...' }
+      end
+    end
+  end
+
   def edit
-    @photo = UpdatePhoto.new(
-      photo: set_photo,
-      image: @photo.image,
-      name: @photo.name,
-      description: @photo.description
-    )
     respond_to do |format|
       format.js { render :edit }
       format.html
@@ -73,12 +63,11 @@ class Users::PhotosController < ApplicationController
   end
 
   def update
-    inputs = { photo: set_photo }.reverse_merge(params[:photo])
-    @photo = UpdatePhoto.run(inputs)
+    @photo = UpdatePhotoService.call(photo_params, @photo)
     respond_to do |format|
       if @photo
-        format.js { render partial: 'photos', notice: 'success' }
-        format.html { redirect_to users_photo_url(@photo.result), notice: 'success' }
+        format.js { render :edit }
+        format.html { redirect_to users_photo_url(@photo), notice: 'success' }
       else
         format.js { render :edit }
         format.html { render :edit, notice: 'Not created...' }
@@ -97,9 +86,9 @@ class Users::PhotosController < ApplicationController
 
   private
 
-  # def photo_params
-  #   params.require(:photo).permit(:name, :description, :image)
-  # end
+  def photo_params
+    params.require(:photo).permit(:name, :description, :image)
+  end
 
   def set_photo
     @photo = Photo.find(params[:id])

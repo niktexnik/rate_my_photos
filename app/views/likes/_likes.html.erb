@@ -1,8 +1,7 @@
 <%= photo.likes_count %>
-<%= puts "FR0M PARTIAL=========PHOTO____#{photo}, LIKE____#{like}" %>
 <%if user_signed_in?%>
   <% if like&.persisted? %>
-    <%= link_to '❤', photo_like_path(photo, like), class: "btn btn-clean", id: "btnUnlike" %>
+    <%= link_to '❤', photo_like_path(photo, like), class: "btn btn-clean 1", id: "btnUnlike" %>
   <%else%>
     <%= form_with url: photo_likes_path(photo), id: 'form', html: {style: "display:inline;"}  do |form| %>
       <%=form.submit "🤍", class:'btn btn-clean', id: 'btnLike' %>
