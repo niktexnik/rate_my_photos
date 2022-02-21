@@ -1,4 +1,4 @@
-class ListPhotos < ActiveInteraction::Base
+class ListsPhoto < ActiveInteraction::Base
   string :q, default: nil
   string :sort, default: nil
   integer :page, default: nil
@@ -11,6 +11,5 @@ class ListPhotos < ActiveInteraction::Base
       @photos = @photos.ordered_by(order, direction)
     end
     @photos = @photos.page(page)
-    @photos
   end
 end

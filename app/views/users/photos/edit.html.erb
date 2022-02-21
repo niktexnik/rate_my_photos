@@ -2,10 +2,13 @@
 <div class="row">
     <%= form_with scope: :photo, url: users_photo_path, method: :put ,html: { multipart: true } do |form| %>
       <%= render 'shared/error_messages' %>
-      
-      <%= form.label "image" %>
-      <%= form.file_field :image, class: 'form-control'%>
-
+      <% if @photo %>
+        <%= form.label "image new" %>
+        <%= form.file_field :image_new, class: 'form-control'%>
+      <% else %>
+        <%= form.label "image" %>
+        <%= form.file_field :image, class: 'form-control'%>
+      <%end%>
       <%= form.label "name" %>
       <%= form.text_field :name, class: 'form-control'%>
 

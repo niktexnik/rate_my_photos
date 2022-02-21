@@ -41,6 +41,7 @@ class Photo < ApplicationRecord
   scope :published, -> { where(status: :published) }
   scope :pending, -> { where(status: :pending) }
   scope :rejected, -> { where(status: :rejected) }
+
   scope :ordered_by, (lambda do |field_name, direction|
     return unless field_name.to_s.in?(column_names) && direction.to_s.downcase.in?(%w[asc desc])
 
@@ -61,10 +62,16 @@ class Photo < ApplicationRecord
 
     event :reject do
       transitions from: :pending, to: :rejected
+      transitions from: :published, to: :rejected
     end
 
     event :revert do
       transitions from: :rejected, to: :pending
+      transitions from: :published, to: :rejected
     end
+  end
+
+  def photo_present?
+    photo.image.present?
   end
 end

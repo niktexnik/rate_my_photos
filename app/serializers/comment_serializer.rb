@@ -22,5 +22,6 @@
 #
 class CommentSerializer < ApplicationSerializer
   attributes :id, :body
-  has_many :comments
+  
+  belongs_to :photo
 end

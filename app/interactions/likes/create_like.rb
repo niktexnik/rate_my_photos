@@ -1,7 +1,5 @@
-class CreatePhoto < ActiveInteraction::Base
-  file :image
-  object :user
-  string :name, :description
+class CreateLike < ActiveInteraction::Base
+  object :like
   # integer :current_user
 
   validates :image, :name, :description, presence: true

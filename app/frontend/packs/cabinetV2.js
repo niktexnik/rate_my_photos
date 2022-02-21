@@ -1,7 +1,7 @@
 window.addEventListener('DOMContentLoaded', () => {
   //cabinet
   const cabinetBtns = document.querySelector('#cabinetBtns');
-  const photoalbum = document.querySelector("#photos");
+  const photoalbum = document.querySelector("[data-photos]");
   const keyPlace = document.querySelector("#key");
   //photo
   const btnSave = document.querySelector('#savePhoto');
@@ -124,11 +124,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
     if (btnEdit) {
       btnEdit.addEventListener('click', function (e) {
-
+        openModal()
         e.preventDefault();
         e.target.style = "pointer-events:none;";
         fetch(e.target.href, {
-          method: 'PUT'
+          method: 'GET'
         }).then(function (response) {
           return response.text();
         }).then(function (text) {

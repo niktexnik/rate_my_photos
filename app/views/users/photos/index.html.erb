@@ -2,24 +2,24 @@
 
 <ul class="nav nav-pills nav-fill mb-3" id='cabinetBtns'>
   <li class="nav-item">
-    <%= link_to "Add photo", new_users_photo_path, class: 'nav-item', id: "addPhoto" %>
+    <%= link_to "Add photo", new_users_photo_path, class: 'btn btn-light', id: "addPhoto" %>
   </li>
   <li class="nav-item">
-    <%= link_to "Edit profile", edit_user_registration_path, class: 'nav-item', id: "editProfile" %>
+    <%= link_to "Edit profile", edit_user_registration_path, class: 'btn btn-light', id: "editProfile" %>
   </li>
   <li class="nav-item">
-    <%= link_to "Show my photos", users_photos_path, class: 'nav-item', id: "showPhotos"%>
+    <%= link_to "Show my photos", users_photos_path, class: 'btn btn-light', id: "showPhotos"%>
   </li>
   <li class="nav-item">
-    <%= link_to "Generate API key", users_updatekey_path, class: 'nav-item', id: 'getKey'%>   
+    <%= link_to "Generate API key", users_updatekey_path, class: 'btn btn-light', id: 'getKey'%>   
   </li>
 </ul>
 
   <div id="key">
-    <h4><%= render 'key' %> </h4>
+    <%= render 'key' %>
   </div>
 
-  <div id="photos"></div>
+  <div data-photos></div>
 
   <div class="modal">
     <div class="modal__dialog">

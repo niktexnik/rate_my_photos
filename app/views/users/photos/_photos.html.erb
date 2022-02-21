@@ -1,3 +1,5 @@
+<% if @photos %>
+  <%= render 'search'%> 
   <%= paginate @photos %>
   <div class="album py-5 bg-light">
     <div class="container">
@@ -29,3 +31,6 @@
     </div>
   </div>
   <%= paginate @photos %>
+  <% else %>
+  <h2> No content...<h2>
+  <% end %>

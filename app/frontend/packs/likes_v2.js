@@ -45,6 +45,5 @@ function initJs(nodes) {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-  forms = document.querySelectorAll("#likeForm");
-  initJs(forms);
+  initJs(document.querySelectorAll('[data-like-id]'));
 });

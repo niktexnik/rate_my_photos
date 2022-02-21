@@ -1,15 +1,5 @@
-<div class='comtainer'> 
+<div class='container'> 
   <%= render 'shared/search'%> 
-
-<%# <p class='text-right'>Sort by: | %>
-<%# <%= link_to "Date ⬆", photos_url(order: :created_at, direction: 'asc'), title: 'Order asc' %> 
-<%# <%= link_to "Date ⬇", photos_url(order: :created_at,  direction: 'desc'), title: 'Order desc' %>
-<%# <%= link_to "Likes⬆", photos_url(order: :likes_count, direction: 'asc'), title: 'Order asc' %> 
-<%# <%= link_to "Likes⬇", photos_url(order: :likes_count, direction: 'desc'), title: 'Order desc' %> 
-<%# <%= link_to "Comments⬆", photos_url(order: :comments_count, direction: 'asc'), title: 'Order asc' %> 
-<%# <%= link_to "Comments⬇", photos_url(order: :comments_count, direction: 'desc'), title: 'Order desc' %> 
-<%# </p>  %>
-<%# </div> %>
   <% if @photos %>
     <%= paginate @photos %>
 
@@ -31,7 +21,7 @@
                     </div>
                     <p class="card-text"><small class="text-muted"><%= time_ago_in_words(photo.created_at)%> ago</small></p>
                     <%like = photo.likes.find_by(user: current_user)%>
-                    <div id='likeForm'>
+                    <div data-like-id="<%=photo.id%>">
                       <%=render partial: 'likes/likes', locals: {photo: photo, like: like}%>
                     </div>
                   </div>

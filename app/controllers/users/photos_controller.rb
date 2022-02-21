@@ -2,16 +2,16 @@ class Users::PhotosController < ApplicationController
   include PhotosHelper
   skip_before_action :verify_authenticity_token
   before_action :authenticate_user!, except: %i[index preview]
-  before_action :set_photo, only: %i[edit update destroy preview show]
+  before_action :set_photo, only: %i[edit update destroy show]
   before_action :authorize_photo!
   after_action :verify_authorized
 
   def index
-    @photos = current_user.photos.all
-    if params.dig(:q, :search).present?
-      @photos = @photos.where('name ILIKE :search or description ILIKE :search', search: "%#{params.dig(:q, :search)}%")
-    end
-    @photos = @photos.page(params[:page])
+    puts "PARAMS                       #{params}"
+    @search = ListsPhotoCabinet.run(params)
+    puts "SEARCH                       #{@search}"
+    @photos = @search.result
+    puts "PHOTO                       #{@photos}"
     respond_to do |format|
       format.js { render partial: 'photos' }
       format.html
@@ -29,7 +29,6 @@ class Users::PhotosController < ApplicationController
 
   def new
     @photo = CreatePhoto.new
-    # @photo = current_user.photos.build
     respond_to do |format|
       format.js { render :new }
       format.html
@@ -48,24 +47,17 @@ class Users::PhotosController < ApplicationController
       end
     end
   end
-  # def create
-  #   @photo = CreatePhoto.run(params.fetch(:photo, {}).merge(user: current_user))
-  #   if @photo.valid?
-  #     flash[:success] = 'Success'
-  #     redirect_to users_photo_url(@photo.result)
-  #   else
-  #     flash[:danger] = 'Not created...'
-  #     render :new
-  #   end
-  # end
 
   def edit
+    photo = find_photo!
+    puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1) Photo from controller edit: #{photo}"
     @photo = UpdatePhoto.new(
-      photo: set_photo,
+      photo: photo,
       image: @photo.image,
       name: @photo.name,
       description: @photo.description
     )
+    puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!2) Photo from controller edit: #{@photo}"
     respond_to do |format|
       format.js { render :edit }
       format.html
@@ -73,10 +65,14 @@ class Users::PhotosController < ApplicationController
   end
 
   def update
-    inputs = { photo: set_photo }.reverse_merge(params[:photo])
+    inputs = { photo: find_photo! }.reverse_merge(params[:photo])
+    puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1) Inputs from controller update: #{inputs}"
+    puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1) PHOTO from controller update: #{params[:photo]}"
+
     @photo = UpdatePhoto.run(inputs)
+    puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!2) Photo from controller update: #{@photo}"
     respond_to do |format|
-      if @photo
+      if @photo.valid?
         format.js { render partial: 'photos', notice: 'success' }
         format.html { redirect_to users_photo_url(@photo.result), notice: 'success' }
       else
@@ -106,12 +102,12 @@ class Users::PhotosController < ApplicationController
   end
 
   def find_photo!
-    outcome = FindPhoto.run(params)
+    photo = FindPhoto.run(params)
 
-    if outcome.valid?
-      outcome.result
+    if photo.valid?
+      photo.result
     else
-      raise ActiveRecord::RecordNotFound, outcome.errors.full_messages.to_sentence
+      raise ActiveRecord::RecordNotFound, photo.errors.full_messages.to_sentence
     end
   end
 

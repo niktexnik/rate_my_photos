@@ -1,6 +1,6 @@
 class PhotosController < ApplicationController
   def index
-    @search = ListPhotos.run(params)
+    @search = ListsPhoto.run(params)
     @photos = @search.result
   end
 
