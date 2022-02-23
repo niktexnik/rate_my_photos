@@ -17,7 +17,7 @@ class LikesController < ApplicationController
 
   def destroy
     @like = @photo.likes.find(params[:id])
-    @like.destroy
+    DestroyLike.run!(like: @like)
     respond_to do |format|
       format.js { render partial: 'likes/likes', locals: { photo: @photo, like: @like } }
       format.html { redirect_to preview_photo_url(@photo), notice: 'Like deleted!' }

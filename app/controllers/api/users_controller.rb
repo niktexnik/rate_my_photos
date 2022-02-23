@@ -1,8 +1,17 @@
 module Api
   class UsersController < ApplicationController
     def index
-      @users = User.all
-      render json: @users, each_serializer: UserSerializer
+      render json: User.all, each_serializer: UserSerializer
+    end
+
+    def show
+      render json: User.find(params[:id]), each_serializer: UserSerializer
+    end
+
+    private
+
+    def api_auth
+      
     end
   end
 end

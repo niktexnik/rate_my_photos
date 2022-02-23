@@ -1,18 +1,12 @@
 class CreateComment < ActiveInteraction::Base
-  object :user
   string :body
-  # integer :current_user
+  object :user, class: User
+  object :commentable
 
   validates :body, presence: true
 
-  def to_model
-    Comment.new
-  end
-
   def execute
-    comment = Comment.new(inputs)
-    comment.body = body
-
+    comment = commentable.comments.create(body: body, user: user, photo: commentable)
     errors.merge!(comment.errors) unless comment.save
 
     comment

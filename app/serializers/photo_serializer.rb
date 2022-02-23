@@ -26,6 +26,7 @@
 #
 class PhotoSerializer < ApplicationSerializer
   attributes :id, :name, :description, :image
+
   belongs_to :user
   has_many :comments
 end

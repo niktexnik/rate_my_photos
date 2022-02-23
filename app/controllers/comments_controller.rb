@@ -4,10 +4,6 @@ class CommentsController < ApplicationController
   before_action :authorize_comment!
   after_action :verify_authorized
 
-  def show; end
-
-  def edit; end
-
   def update
     if @comment.update(comment_params)
       flash[:success] = 'Updated'
@@ -18,12 +14,23 @@ class CommentsController < ApplicationController
     end
   end
 
+  # def create
+  #   @comment = @commentable.comments.build(comment_params)
+  #   @comment.user = current_user
+  #   if @comment.save
+  #     flash[:success] = 'Success'
+  #     redirect_back fallback_location: '/'
+  #   else
+  #     flash[:danger] = 'Not created...'
+  #     render 'photos/preview'
+  #   end
+  # end
+
   def create
-    @comment = @commentable.comments.build(comment_params)
-    @comment.user = current_user
-    if @comment.save
+    @comment = CreateComment.run(params.fetch(:comment, {}).merge(user: current_user, commentable: @commentable))
+    puts "commene----------------------------------------------------------------#{@comment}"
+    if @comment.valid?
       flash[:success] = 'Success'
-      CommentNotification.with(photo: @commentable).deliver(current_user) if @commentable.is_a?(Photo)
       redirect_back fallback_location: '/'
     else
       flash[:danger] = 'Not created...'
@@ -32,7 +39,7 @@ class CommentsController < ApplicationController
   end
 
   def destroy
-    @comment.destroy
+    DestroyComment.run!(comment: @comment)
     respond_to do |format|
       format.js
       format.html { redirect_back fallback_location: '/', notice: 'Comment deleted!' }
@@ -41,9 +48,9 @@ class CommentsController < ApplicationController
 
   private
 
-  def comment_params
-    params.require(:comment).permit(:body, :photo_id)
-  end
+  # def comment_params
+  #   params.require(:comment).permit(:body, :photo_id)
+  # end
 
   def set_commentable
     @commentable =

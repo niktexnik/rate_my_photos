@@ -1,7 +1,13 @@
 class PhotosController < ApplicationController
+  skip_before_action :verify_authenticity_token
+
   def index
     @search = ListsPhoto.run(params)
     @photos = @search.result
+    respond_to do |format|
+      format.js { render partial: 'photos_main' }
+      format.html
+    end
   end
 
   def preview

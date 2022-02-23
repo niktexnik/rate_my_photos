@@ -20,10 +20,6 @@ Rails.application.routes.draw do
     resources :photos
   end
 
-  namespace :moderate do
-    resources :photos
-  end
-
   namespace :api do
     resources :photos
     resources :users

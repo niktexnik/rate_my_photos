@@ -11,9 +11,6 @@
             <%= link_to "Cabinet", users_photos_path, class: 'nav-link'%>
           </li>
           <li class="nav-item">
-            <%= link_to "MODERATE", moderate_photos_url, class: 'nav-link' if current_user.moderator?%>
-          </li>
-          <li class="nav-item">
             <%= link_to "Log out!", destroy_user_session_path, method: :delete, class: 'nav-link'%>
           </li>
           <%else%>

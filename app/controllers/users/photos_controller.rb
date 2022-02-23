@@ -7,11 +7,8 @@ class Users::PhotosController < ApplicationController
   after_action :verify_authorized
 
   def index
-    puts "PARAMS                       #{params}"
-    @search = ListsPhotoCabinet.run(params)
-    puts "SEARCH                       #{@search}"
+    @search = ListsPhotoCabinet.run(params.merge(user: current_user))
     @photos = @search.result
-    puts "PHOTO                       #{@photos}"
     respond_to do |format|
       format.js { render partial: 'photos' }
       format.html

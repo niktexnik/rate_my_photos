@@ -27,7 +27,7 @@
 class Photo < ApplicationRecord
   include AASM
   include Commentable
-
+  
   paginates_per 4
 
   mount_uploader :image, ImageUploader
