@@ -10,7 +10,7 @@
       ["Likes⬇", 'likes_count.desc'],
       ["Comments⬆", 'comments_count.asc'],
       ["Comments⬇", 'comments_count.desc'],
-      ], @search.sort), include_blank: "Select sort...", class: "form-select" %>
+      ], @search.sort), include_blank: "Select sort...", class: "form-select", id:'sort' %>
   </div>
   <div class="col-auto">  
     <%= f.submit 'Go', class: "btn btn-primary" %>

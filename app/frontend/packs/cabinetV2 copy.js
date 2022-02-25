@@ -34,8 +34,7 @@ window.addEventListener('DOMContentLoaded', () => {
       return response.text();
     }).then(function (text) {
       album.innerHTML = text;
-      initPaginate(document.querySelectorAll('[data-paginate]'));
-      initAlbumJs(document.querySelectorAll('[data-cards]'));
+      initAlbumJs(album);
     }).catch(function (error) {
       console.log(error);
     });
@@ -80,12 +79,14 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  function initPhotoFormActions(card) {
+  function initPhotoFormActions(form) {
+    console.log("initPhotoFormActions")
+    console.log("form", form)
 
     //photo
-    const btnEdit = card.querySelector('#editPhoto');
-    const btnDelete = card.querySelector('#deletePhoto');
-    const btnView = card.querySelector('#viewPhoto');
+    const btnEdit = form.querySelector('#editPhoto');
+    const btnDelete = form.querySelector('#deletePhoto');
+    const btnView = form.querySelector('#viewPhoto');
 
     if (btnView) {
       btnView.addEventListener('click', function (e) {
@@ -139,34 +140,11 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function initAlbumJs(cards) {
-    cards.forEach((card) => initPhotoFormActions(card));
+  function initAlbumJs(album) {
+    const cards = album.querySelectorAll('.card')
+    cards.forEach((node) => initPhotoFormActions(node));
   }
 
-  //==============PAGINATION====================================
-  function initPageActions(page) {
-    page.addEventListener('click', function (e) {
-      e.preventDefault();
-      if (e.target.classList.contains("page-link")) {
-        // e.target.style = "pointer-events:none;";
-        fetch(e.target.href, {
-          method: 'GET'
-        }).then(function (response) {
-          return response.text();
-        }).then(function (text) {
-          album.innerHTML = text;
-          initPaginate(document.querySelectorAll('[data-paginate]'));
-          initAlbumJs(document.querySelectorAll('[data-cards]'));
-        }).catch(function (error) {
-          console.log(error);
-        });
-      }
-    });
-  }
-  
-  function initPaginate(pages) {
-    pages.forEach((page) => initPageActions(page));
-  }
   // //modal
   function closeModal() {
     modal.classList.add('hide');
