@@ -1,34 +1,25 @@
 class CommentsController < ApplicationController
+  skip_before_action :verify_authenticity_token
   before_action :set_commentable
   before_action :set_comment, except: :create
   before_action :authorize_comment!
   after_action :verify_authorized
 
   def update
-    if @comment.update(comment_params)
-      flash[:success] = 'Updated'
-      redirect_to preview_photo_url(@commentable)
-    else
-      flash[:danger] = 'Not updated...'
-      render :edit
+    inputs = { comment: set_comment }.reverse_merge(params[:comment])
+    @comment = UpdateComment.run(inputs)
+    respond_to do |format|
+      if @comment.valid?
+        format.html { redirect_to preview_photo_url(@commentable), notice: 'Updated' }
+      else
+        format.html { render :edit, notice: ' Not Updated' }
+      end
+      format.js { render :edit }
     end
   end
 
-  # def create
-  #   @comment = @commentable.comments.build(comment_params)
-  #   @comment.user = current_user
-  #   if @comment.save
-  #     flash[:success] = 'Success'
-  #     redirect_back fallback_location: '/'
-  #   else
-  #     flash[:danger] = 'Not created...'
-  #     render 'photos/preview'
-  #   end
-  # end
-
   def create
     @comment = CreateComment.run(params.fetch(:comment, {}).merge(user: current_user, commentable: @commentable))
-    puts "commene----------------------------------------------------------------#{@comment}"
     if @comment.valid?
       flash[:success] = 'Success'
       redirect_back fallback_location: '/'
@@ -47,10 +38,6 @@ class CommentsController < ApplicationController
   end
 
   private
-
-  # def comment_params
-  #   params.require(:comment).permit(:body, :photo_id)
-  # end
 
   def set_commentable
     @commentable =

@@ -34,7 +34,9 @@ window.addEventListener('DOMContentLoaded', () => {
       return response.text();
     }).then(function (text) {
       album.innerHTML = text;
-      initAlbumJs(album);
+      initPaginate(document.querySelectorAll('[data-paginate]'));
+      initAlbumJs(document.querySelectorAll('[data-cards]'));
+      initSerach(document.querySelector('[data-search]'));
     }).catch(function (error) {
       console.log(error);
     });
@@ -79,14 +81,12 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  function initPhotoFormActions(form) {
-    console.log("initPhotoFormActions")
-    console.log("form", form)
+  function initPhotoFormActions(card) {
 
     //photo
-    const btnEdit = form.querySelector('#editPhoto');
-    const btnDelete = form.querySelector('#deletePhoto');
-    const btnView = form.querySelector('#viewPhoto');
+    const btnEdit = card.querySelector('#editPhoto');
+    const btnDelete = card.querySelector('#deletePhoto');
+    const btnView = card.querySelector('#viewPhoto');
 
     if (btnView) {
       btnView.addEventListener('click', function (e) {
@@ -140,12 +140,55 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function initAlbumJs(album) {
-    const cards = album.querySelectorAll('.card')
-    cards.forEach((node) => initPhotoFormActions(node));
+  function initAlbumJs(cards) {
+    cards.forEach((card) => initPhotoFormActions(card));
   }
 
-  // //modal
+  //==============PAGINATION====================================
+  function initPageActions(page) {
+    page.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (e.target.classList.contains("page-link")) {
+        // e.target.style = "pointer-events:none;";
+        fetch(e.target.href, {
+          method: 'GET'
+        }).then(function (response) {
+          return response.text();
+        }).then(function (text) {
+          album.innerHTML = text;
+          initPaginate(document.querySelectorAll('[data-paginate]'));
+          initAlbumJs(document.querySelectorAll('[data-cards]'));
+        }).catch(function (error) {
+          console.log(error);
+        });
+      }
+    });
+  }
+  
+  function initPaginate(pages) {
+    pages.forEach((page) => initPageActions(page));
+  }
+  //=================SEARCH===============================
+  function initSerach(form) {
+    const album = document.querySelector('[data-album]');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      params = new URLSearchParams(new FormData(form)).toString()
+      fetch(form.action + '?' + params, {
+        method: 'GET'
+      }).then(function (response) {
+        return response.text();
+      }).then(function (text) {
+        album.innerHTML = text;
+        initSerach(document.querySelector('[data-search]'));
+        initAlbumJs(document.querySelectorAll('[data-cards]'));
+        initPaginate(document.querySelectorAll('[data-paginate]'));
+      }).catch(function (error) {
+        console.log(error);
+      });
+    });
+  }
+  //=================MODAL================================
   function closeModal() {
     modal.classList.add('hide');
     modal.classList.remove('show');

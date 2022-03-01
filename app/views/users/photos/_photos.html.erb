@@ -1,5 +1,5 @@
+<%= render 'search'%>
 <% if @photos %>
-  <%= render 'search'%> 
   <%= paginate @photos %>
   <div class="album py-5 bg-light">
     <div class="container">
@@ -17,7 +17,7 @@
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
                   <%= link_to "View", users_photo_path(photo), class: 'btn btn-sm btn-outline-secondary', id: "viewPhoto" %>
-                  <%= link_to "Edit", edit_users_photo_path(photo), class: 'btn btn-sm btn-outline-secondary', id: "editPhoto"%>
+                  <%= link_to "Edit", edit_users_photo_path(photo), class: 'btn btn-sm btn-outline-secondary', id: "editPhoto" if !photo.pending?%> 
                   <%= link_to "Delete", users_photo_path(photo), class: 'btn btn-sm btn-outline-secondary',
                         method: :delete, data: { confirm: "Are you shure?" }, id: "deletePhoto" %>
                 </div>
@@ -31,34 +31,6 @@
     </div>
   </div>
   <%= paginate @photos %>
-  <% else %>
+<% else %>
   <h2> No content...<h2>
-  <% end %>
-<%# 
-  <script>
-    function initSerach() {
-      const forma = document.querySelector('#cont');
-      const formData = document.querySelector('#form-search');
-      const btnGo = document.querySelector('#go');
-      btnGo.addEventListener('submit', function (e) {
-        e.target.style = "pointer-events:none;";
-        e.preventDefault();
-        const formData = new FormData(this);
-        console.log(FormData)
-        fetch(e.target.form.action, {
-          method: 'GET',
-          body: formData
-        }).then(function (response) {
-          return response.text();
-        }).then(function (text) {
-        forma.innerHTML = text;
-        initSerach();
-        }).catch(function (error) {
-        console.log(error);
-        });
-      });
-    } 
-  window.addEventListener('DOMContentLoaded', () => {
-    initSerach();
-  });
-</script> %>
+<% end %>

@@ -11,11 +11,9 @@ import '../js/bootstrap_js_files.js'
 import '../stylesheets/application.scss'
 import '../stylesheets/modal_dialog.scss'
 import 'bootstrap'
-// import './likes_v2'
-import './paginate'
-// import './modal'
-import './cabinetV2'
-// import './cabinet_photo'
+import './mainPage'
+import './1'
+import './personalPage'
 require("../stylesheets/application.scss")
 
 Rails.start()

@@ -27,7 +27,7 @@
 class Photo < ApplicationRecord
   include AASM
   include Commentable
-  
+
   paginates_per 4
 
   mount_uploader :image, ImageUploader
@@ -55,6 +55,7 @@ class Photo < ApplicationRecord
     state :pending, initial: true
     state :published
     state :rejected
+    state :deleted
 
     event :aprove do
       transitions from: :pending, to: :published
@@ -65,13 +66,16 @@ class Photo < ApplicationRecord
       transitions from: :published, to: :rejected
     end
 
+    event :delete do
+      transitions from: :pending, to: :deleted
+      transitions from: :published, to: :deleted
+      transitions from: :rejected, to: :deleted
+    end
+
     event :revert do
       transitions from: :rejected, to: :pending
       transitions from: :published, to: :rejected
+      transitions from: :deleted, to: :pending
     end
-  end
-
-  def photo_present?
-    photo.image.present?
   end
 end

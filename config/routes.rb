@@ -21,9 +21,11 @@ Rails.application.routes.draw do
   end
 
   namespace :api do
-    resources :photos
     resources :users
-    resources :comments
+    resources :photos do
+      resources :comments
+      resources :likes
+    end
   end
 
   put 'users/updatekey', to: 'users#update_key'

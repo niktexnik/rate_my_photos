@@ -1,5 +1,5 @@
   <%if policy(@comment).create?%> 
-    <%= form_for [commentable, Comment.new] do |form| %>
+    <%= form_for [commentable, Comment.new], html: { data: { comment: 'comment' } } do |form| %>
       <div class="field">
         <%= form.text_field :body, class: 'form-control', placeholder: 'input your comment'%>
       </div>

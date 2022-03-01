@@ -1,10 +1,11 @@
 module Api
   class PhotosController < ApplicationController
+    before_action :api_auth, except: %i[index show]
     before_action :authenticate_user!, except: %i[index show]
     before_action :find_photo!, except: %i[index create show]
 
     def index
-      photos = ListsPhoto.run(params)
+      photos = ListsPhotoApi.run(params)
       if photos.valid?
         photos = photos.result.includes(:comments).page(params.dig(:page, :number)).per(params.dig(:page, :size))
         render json: photos, meta: pagination_dict(photos), each_serializer: PhotoSerializer

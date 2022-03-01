@@ -7,11 +7,5 @@ module Api
     def show
       render json: User.find(params[:id]), each_serializer: UserSerializer
     end
-
-    private
-
-    def api_auth
-      
-    end
   end
 end

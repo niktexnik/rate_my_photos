@@ -1,8 +1,8 @@
-<%= form_for :search, method: :get, url: users_photos_url, html: {class: "row g-3 mt-1", id: "form-search"} do |f| -%>
+<%= form_for :search, method: :get, url: users_photos_url, html: {class: "row g-3 mt-1", data: { search: 'search' } } do |f| -%>
   <div class="col-md-9">
       <%= text_field_tag :q, @search.q, placeholder: 'Search...', class: 'form-control' %>
   </div>
-  <div class="col-md-2">  
+  <div class="col-md-2"> 
     <%= select_tag :sort, options_for_select([
       ["Pending", 'pending'],
       ["Published", 'published'],
@@ -10,6 +10,6 @@
       ], @search.sort), include_blank: "Select sort...", class: "form-select" %>
   </div>
   <div class="col-auto">  
-    <%= f.submit 'Go', class: "btn btn-primary", id: "go" %>
+    <%= f.submit 'Go', class: "btn btn-primary" %>
   </div>
 <% end -%>

@@ -1,19 +1,10 @@
 class CreateLike < ActiveInteraction::Base
-  object :like
-  # integer :current_user
-
-  validates :image, :name, :description, presence: true
-
-  def to_model
-    Photo.new
-  end
+  object :photo, :user
 
   def execute
-    photo = Photo.new(inputs)
-    photo.user = user
+    like = photo.likes.create(inputs)
+    errors.merge!(like.errors) unless like.save
 
-    errors.merge!(photo.errors) unless photo.save
-
-    photo
+    like
   end
 end

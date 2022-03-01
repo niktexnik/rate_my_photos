@@ -18,4 +18,12 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit(:sign_up, keys: %i[name image uid provider])
     devise_parameter_sanitizer.permit(:account_update, keys: %i[name image uid provider])
   end
+
+  private
+
+  def api_auth
+    token = request.headers['token']
+    @api_user = User.find_by(api_key: token)
+    render json: { message: 'unauthorized' } unless @api_user
+  end
 end

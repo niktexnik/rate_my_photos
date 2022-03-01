@@ -19,6 +19,25 @@ function initPageActions(page) {
   });
 }
 
+function initSerach(form) {
+  const album = document.querySelector('[data-album]');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    params = new URLSearchParams(new FormData(form)).toString()
+    fetch(form.action + '?' + params, {
+      method: 'GET'
+    }).then(function (response) {
+      return response.text();
+    }).then(function (text) {
+      album.innerHTML = text;
+      initSerach(document.querySelector('[data-search]'));
+      initLikeJs(document.querySelectorAll('[data-like-id]'));
+    }).catch(function (error) {
+      console.log(error);
+    });
+  });
+}
+
 function initLikeFormActions(form) {
 
   const btnLike = form.querySelector('#btnLike');
@@ -71,4 +90,5 @@ function initLikeJs(nodes) {
 window.addEventListener('DOMContentLoaded', () => {
   initPaginate(document.querySelectorAll('[data-paginate]'));
   initLikeJs(document.querySelectorAll('[data-like-id]'));
+  initSerach(document.querySelector('[data-search]'));
 });

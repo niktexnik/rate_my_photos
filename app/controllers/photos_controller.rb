@@ -15,6 +15,11 @@ class PhotosController < ApplicationController
     @comment = @photo.comments.build
     @comments = @photo.comments.all.includes(:user)
     @like = @photo.likes.find_by(user: current_user)
+    respond_to do |format|
+      format.js { render partial: 'comments/comments_list' }
+      # format.js { render partial: 'comments/form', locals: { commentable: @photo } }
+      format.html {}
+    end
   end
 
   private

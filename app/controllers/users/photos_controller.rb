@@ -1,5 +1,4 @@
 class Users::PhotosController < ApplicationController
-  include PhotosHelper
   skip_before_action :verify_authenticity_token
   before_action :authenticate_user!, except: %i[index preview]
   before_action :set_photo, only: %i[edit update destroy show]
@@ -47,14 +46,12 @@ class Users::PhotosController < ApplicationController
 
   def edit
     photo = find_photo!
-    puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1) Photo from controller edit: #{photo}"
     @photo = UpdatePhoto.new(
       photo: photo,
       image: @photo.image,
       name: @photo.name,
       description: @photo.description
     )
-    puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!2) Photo from controller edit: #{@photo}"
     respond_to do |format|
       format.js { render :edit }
       format.html
@@ -63,11 +60,7 @@ class Users::PhotosController < ApplicationController
 
   def update
     inputs = { photo: find_photo! }.reverse_merge(params[:photo])
-    puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1) Inputs from controller update: #{inputs}"
-    puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1) PHOTO from controller update: #{params[:photo]}"
-
     @photo = UpdatePhoto.run(inputs)
-    puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!2) Photo from controller update: #{@photo}"
     respond_to do |format|
       if @photo.valid?
         format.js { render partial: 'photos', notice: 'success' }
@@ -89,10 +82,6 @@ class Users::PhotosController < ApplicationController
   end
 
   private
-
-  # def photo_params
-  #   params.require(:photo).permit(:name, :description, :image)
-  # end
 
   def set_photo
     @photo = Photo.find(params[:id])

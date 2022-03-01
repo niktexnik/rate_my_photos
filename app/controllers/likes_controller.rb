@@ -1,12 +1,12 @@
 class LikesController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :set_photo, only: %i[create destroy]
+
   def create
-    @like = @photo.likes.build
-    @like.user = current_user
-    if @like.save
+    @like = CreateLike.run(params.fetch(:like, {}).merge(user: current_user, photo: @photo))
+    if @like.valid?
       respond_to do |format|
-        format.js { render partial: 'likes/likes', locals: { photo: @photo, like: @like } }
+        format.js { render partial: 'likes/likes', locals: { photo: @photo, like: @like.result } }
         format.html { redirect_to preview_photo_url(@photo), notice: 'Liked!' }
       end
     else

@@ -104,6 +104,10 @@ ActiveAdmin.register Photo do
 
   member_action :aprove do
     photo = Photo.find(params[:id])
+    if photo.image_new.present?
+      photo.image = photo.image_new
+      photo.image_new = nil
+    end
     photo.update(moderated_date: Time.zone.now)
     photo.aprove!
     redirect_to admin_photos_path
@@ -111,7 +115,7 @@ ActiveAdmin.register Photo do
 
   member_action :reject do
     photo = Photo.find(params[:id])
-    photo.update(rejection_reason: "Photo cant't published!")
+    photo.update(rejection_reason: "Photo cant't be published!")
     photo.reject!
     redirect_to admin_photos_path
   end

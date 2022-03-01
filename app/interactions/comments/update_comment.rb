@@ -2,9 +2,7 @@ class UpdateComment < ActiveInteraction::Base
   object :comment
   string :body
 
-  puts "!!!!!!!!!! name: #{name}"
-
-  validates :body, presence: true, unless: -> { name.nil? }
+  validates :body, presence: true, unless: -> { body.nil? }
 
   def execute
 
@@ -12,10 +10,10 @@ class UpdateComment < ActiveInteraction::Base
     #keys = %w[a, b, c]
     #result = params.select{|key| key.in?(keys) && key.present?}
 
-    photo.body = body if body.present?
+    comment.body = body if body.present?
 
-    errors.merge!(photo.errors) unless photo.save
+    errors.merge!(comment.errors) unless comment.save
 
-    photo
+    comment
   end
 end
