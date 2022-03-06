@@ -2,7 +2,8 @@ class PhotosController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def index
-    @search = ListsPhoto.run(params)
+    @search = Photos::Index.run(params)
+    ActionCable.server.broadcast('web_notification_channel', 'You have visited the welcome page.')
     @photos = @search.result
     respond_to do |format|
       format.js { render partial: 'photos_main' }
@@ -17,7 +18,6 @@ class PhotosController < ApplicationController
     @like = @photo.likes.find_by(user: current_user)
     respond_to do |format|
       format.js { render partial: 'comments/comments_list' }
-      # format.js { render partial: 'comments/form', locals: { commentable: @photo } }
       format.html {}
     end
   end
@@ -25,7 +25,7 @@ class PhotosController < ApplicationController
   private
 
   def find_photo!
-    outcome = FindPhoto.run(params)
+    outcome = Photos::Show.run(params)
 
     if outcome.valid?
       outcome.result

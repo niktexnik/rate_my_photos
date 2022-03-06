@@ -55,27 +55,33 @@ class Photo < ApplicationRecord
     state :pending, initial: true
     state :published
     state :rejected
-    state :deleted
+    state :removed
 
     event :aprove do
       transitions from: :pending, to: :published
+      transitions from: :pending, to: :removed
     end
 
     event :reject do
       transitions from: :pending, to: :rejected
       transitions from: :published, to: :rejected
+      transitions from: :rejected, to: :removed
     end
 
-    event :delete do
-      transitions from: :pending, to: :deleted
-      transitions from: :published, to: :deleted
-      transitions from: :rejected, to: :deleted
+    event :remove do
+      transitions from: :pending, to: :removed
+      transitions from: :published, to: :removed
+      transitions from: :rejected, to: :removed
     end
 
     event :revert do
       transitions from: :rejected, to: :pending
       transitions from: :published, to: :rejected
-      transitions from: :deleted, to: :pending
+      transitions from: :removed, to: :pending
+    end
+
+    event :change do
+      transitions from: :published, to: :pending
     end
   end
 end

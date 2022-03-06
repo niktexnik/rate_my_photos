@@ -6,7 +6,7 @@ class Users::PhotosController < ApplicationController
   after_action :verify_authorized
 
   def index
-    @search = ListsPhotoCabinet.run(params.merge(user: current_user))
+    @search = Photos::IndexCabinet.run(params.merge(user: current_user))
     @photos = @search.result
     respond_to do |format|
       format.js { render partial: 'photos' }
@@ -24,7 +24,7 @@ class Users::PhotosController < ApplicationController
   end
 
   def new
-    @photo = CreatePhoto.new
+    @photo = Photos::Create.new
     respond_to do |format|
       format.js { render :new }
       format.html
@@ -32,7 +32,7 @@ class Users::PhotosController < ApplicationController
   end
 
   def create
-    @photo = CreatePhoto.run(params.fetch(:photo, {}).merge(user: current_user))
+    @photo = Photos::Create.run(params.fetch(:photo, {}).merge(user: current_user))
     respond_to do |format|
       if @photo.valid?
         format.js { render partial: 'photos', notice: 'Success' }
@@ -46,7 +46,7 @@ class Users::PhotosController < ApplicationController
 
   def edit
     photo = find_photo!
-    @photo = UpdatePhoto.new(
+    @photo = Photos::Update.new(
       photo: photo,
       image: @photo.image,
       name: @photo.name,
@@ -60,7 +60,7 @@ class Users::PhotosController < ApplicationController
 
   def update
     inputs = { photo: find_photo! }.reverse_merge(params[:photo])
-    @photo = UpdatePhoto.run(inputs)
+    @photo = Photos::Update.run(inputs)
     respond_to do |format|
       if @photo.valid?
         format.js { render partial: 'photos', notice: 'success' }
@@ -73,11 +73,20 @@ class Users::PhotosController < ApplicationController
   end
 
   def destroy
-    @photos = current_user.photos.all
-    DestroyPhoto.run!(photo: @photo)
+    @outcome = Photos::Destroy.run!(photo: @photo)
+    REDIS.set @photo.id, @outcome
     respond_to do |format|
       format.js { render partial: 'photos' }
       format.html { redirect_to users_photos_url, notice: 'Deleted Success' }
+    end
+  end
+
+  def restore
+    @photo = Photo.find(params[:photo_id])
+    @photo = Photos::Revert.run(photo: @photo)
+    respond_to do |format|
+      format.js { render partial: 'photos', notice: 'Restored' }
+      format.html { redirect_to users_photos_url, notice: 'Restored' }
     end
   end
 
@@ -88,7 +97,7 @@ class Users::PhotosController < ApplicationController
   end
 
   def find_photo!
-    photo = FindPhoto.run(params)
+    photo = Photos::Show.run(params)
 
     if photo.valid?
       photo.result

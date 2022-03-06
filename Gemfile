@@ -36,6 +36,8 @@ gem 'webpacker', '~> 5.0'
 
 gem 'redis', '~> 4.0'
 
+gem 'sidekiq'
+
 gem 'puma', '~> 5.0'
 gem 'rails', '~> 6.1.4', '>= 6.1.4.4'
 

@@ -85,7 +85,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     //photo
     const btnEdit = card.querySelector('#editPhoto');
-    const btnDelete = card.querySelector('#deletePhoto');
+    // const btnDelete = card.querySelector('#deletePhoto');
     const btnView = card.querySelector('#viewPhoto');
 
     if (btnView) {
@@ -105,22 +105,22 @@ window.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    if (btnDelete) {
-      btnDelete.addEventListener('click', function (e) {
+    // if (btnDelete) {
+    //   btnDelete.addEventListener('click', function (e) {
 
-        e.preventDefault();
-        e.target.style = "pointer-events:none;";
-        fetch(e.target.href, {
-          method: 'DELETE'
-        }).then(function (response) {
-          return response.text();
-        }).then(function (text) {
-          album.innerHTML = text;
-        }).catch(function (error) {
-          console.log(error);
-        });
-      });
-    }
+    //     e.preventDefault();
+    //     e.target.style = "pointer-events:none;";
+    //     fetch(e.target.href, {
+    //       method: 'DELETE'
+    //     }).then(function (response) {
+    //       return response.text();
+    //     }).then(function (text) {
+    //       album.innerHTML = text;
+    //     }).catch(function (error) {
+    //       console.log(error);
+    //     });
+    //   });
+    // }
 
     if (btnEdit) {
       btnEdit.addEventListener('click', function (e) {

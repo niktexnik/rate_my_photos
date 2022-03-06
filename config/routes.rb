@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  require 'sidekiq/web'
+
+  authenticate :admin_user, ->(user) { user } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
+
   ActiveAdmin.routes(self)
   devise_for :admin_users, ActiveAdmin::Devise.config
 
@@ -17,7 +23,9 @@ Rails.application.routes.draw do
   end
 
   namespace :users do
-    resources :photos
+    resources :photos do
+      get '/restore', to: 'photos#restore', as: :restore
+    end
   end
 
   namespace :api do

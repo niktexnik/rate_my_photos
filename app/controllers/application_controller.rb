@@ -23,7 +23,7 @@ class ApplicationController < ActionController::Base
 
   def api_auth
     token = request.headers['token']
-    @api_user = User.find_by(api_key: token)
-    render json: { message: 'unauthorized' } unless @api_user
+    @current_user = User.find_by(api_key: token)
+    head 401
   end
 end

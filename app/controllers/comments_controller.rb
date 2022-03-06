@@ -7,7 +7,7 @@ class CommentsController < ApplicationController
 
   def update
     inputs = { comment: set_comment }.reverse_merge(params[:comment])
-    @comment = UpdateComment.run(inputs)
+    @comment = Comments::Update.run(inputs)
     respond_to do |format|
       if @comment.valid?
         format.html { redirect_to preview_photo_url(@commentable), notice: 'Updated' }
@@ -19,8 +19,13 @@ class CommentsController < ApplicationController
   end
 
   def create
-    @comment = CreateComment.run(params.fetch(:comment, {}).merge(user: current_user, commentable: @commentable))
+    @comment = Comments::Create.run(params.fetch(:comment, {}).merge(user: current_user, commentable: @commentable))
     if @comment.valid?
+      WebNotificationsChannel.broadcast_to(
+        current_user,
+        title: 'New comment!',
+        body: @comment.body
+      )
       flash[:success] = 'Success'
       redirect_back fallback_location: '/'
     else
@@ -30,7 +35,7 @@ class CommentsController < ApplicationController
   end
 
   def destroy
-    DestroyComment.run!(comment: @comment)
+    Comments::Destroy.run!(comment: @comment)
     respond_to do |format|
       format.js
       format.html { redirect_back fallback_location: '/', notice: 'Comment deleted!' }

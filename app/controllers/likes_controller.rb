@@ -3,7 +3,7 @@ class LikesController < ApplicationController
   before_action :set_photo, only: %i[create destroy]
 
   def create
-    @like = CreateLike.run(params.fetch(:like, {}).merge(user: current_user, photo: @photo))
+    @like = Likes::Create.run(params.fetch(:like, {}).merge(user: current_user, photo: @photo))
     if @like.valid?
       respond_to do |format|
         format.js { render partial: 'likes/likes', locals: { photo: @photo, like: @like.result } }
@@ -17,7 +17,7 @@ class LikesController < ApplicationController
 
   def destroy
     @like = @photo.likes.find(params[:id])
-    DestroyLike.run!(like: @like)
+    Likes::Destroy.run!(like: @like)
     respond_to do |format|
       format.js { render partial: 'likes/likes', locals: { photo: @photo, like: @like } }
       format.html { redirect_to preview_photo_url(@photo), notice: 'Like deleted!' }
