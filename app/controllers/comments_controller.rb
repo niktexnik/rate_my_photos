@@ -19,18 +19,22 @@ class CommentsController < ApplicationController
   end
 
   def create
-    @comment = Comments::Create.run(params.fetch(:comment, {}).merge(user: current_user, commentable: @commentable))
-    if @comment.valid?
-      WebNotificationsChannel.broadcast_to(
-        current_user,
-        title: 'New comment!',
-        body: @comment.body
-      )
-      flash[:success] = 'Success'
+    # @comment = Comments::Create.run(params.fetch(:comment, {}).merge(user: current_user, commentable: @commentable))
+    @comment = @commentable.comments.build(comment_params)
+    @comment.user = current_user
+    if @comment.save
       redirect_back fallback_location: '/'
+      flash[:success] = 'Success'
+      # NotificationsChannel.broadcast_to(@photo, @comment)
+      # ActionCable.server.broadcast("NotificationsChannel", "This is cool!.")
+      # NotificationsChannel.broadcast_to(
+      #   current_user,
+      #   title: 'New comment!',
+      #   body: @comment.body
+      # )
     else
-      flash[:danger] = 'Not created...'
-      render 'photos/preview'
+      # redirect_back fallback_location: '/'
+      flash[:danger] = 'Error'
     end
   end
 
@@ -43,6 +47,10 @@ class CommentsController < ApplicationController
   end
 
   private
+
+  def comment_params
+    params.require(:comment).permit(:body, :photo_id)
+  end
 
   def set_commentable
     @commentable =

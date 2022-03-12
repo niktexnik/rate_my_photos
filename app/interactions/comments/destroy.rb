@@ -1,4 +1,4 @@
-module Destroy
+module Comments
   class Destroy < ActiveInteraction::Base
     object :comment
 

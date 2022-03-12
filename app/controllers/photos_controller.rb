@@ -3,7 +3,6 @@ class PhotosController < ApplicationController
 
   def index
     @search = Photos::Index.run(params)
-    ActionCable.server.broadcast('web_notification_channel', 'You have visited the welcome page.')
     @photos = @search.result
     respond_to do |format|
       format.js { render partial: 'photos_main' }

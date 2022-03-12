@@ -1,0 +1,29 @@
+<h2>Comments</h2>
+    <%comments.each do |comment|%>
+      <div class="container-fluid">
+        <%if comment.user.image.present?%> 
+            <%= image_tag comment.user.image.url(:avatar), class: 'img-fluid img-thumbnail'%>
+        <%else%>
+            <p> No image...</p>
+        <%end%>
+        <div class="mar-btm">
+            <p> <%=comment.user.email%> </p>
+            <p class="text-muted text-sm"> <%=comment.created_at%> </p>
+            <p class='text-md-start'> <%=comment.body%> </p>
+        </div>
+        <div class='btn-group mb-5' data-btns-action>
+        <%if policy(comment).destroy?%>
+          <%= link_to "Delete", photo_comment_path(commentable.is_a?(Photo) ? commentable.id : commentable.photo_id, comment), data: { method: :delete, confirm: "Are you shure" }, class: "btn btn-danger", id: 'deleteComment' %>
+        <%end%>
+        <%if policy(comment).update?%>
+          <%= link_to "Edit", edit_photo_comment_path(commentable.is_a?(Photo) ? commentable.id : commentable.photo_id, comment, comment), class: "btn btn-warning", id: 'editComment' %>
+        <%end%>
+        </div>
+        <div>
+          <%=render partial: "comments/form", locals: {commentable: comment}%>
+        </div> 
+        <%if comment.comments.any?%>
+          <%=render partial: "comments/commentaries", locals: {comments: comment.comments, commentable: comment}%>
+        <%end%>
+      </div>
+    <%end%>
