@@ -4,12 +4,12 @@
 #
 #  id               :bigint           not null, primary key
 #  comments_count   :integer          default(0), not null
-#  description      :text
+#  description      :text             not null
 #  image            :string
 #  image_new        :string
 #  likes_count      :integer          default(0), not null
 #  moderated_date   :date
-#  name             :string
+#  name             :string           not null
 #  rejection_reason :text
 #  status           :string
 #  created_at       :datetime         not null
@@ -26,6 +26,8 @@
 #
 class PhotoSerializer < ApplicationSerializer
   attributes :id, :name, :description, :image
-  has_one :user
+
+  belongs_to :user
   has_many :comments
+  has_many :likes
 end

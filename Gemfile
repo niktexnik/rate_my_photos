@@ -36,10 +36,13 @@ gem 'webpacker', '~> 5.0'
 
 gem 'redis', '~> 4.0'
 
+gem 'sidekiq'
+
 gem 'puma', '~> 5.0'
 gem 'rails', '~> 6.1.4', '>= 6.1.4.4'
 
 gem 'bootsnap', '>= 1.4.4', require: false
+gem 'pry-rails', group: :development
 
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
@@ -52,5 +55,3 @@ group :development do
 end
 
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
-
-gem "noticed", "~> 1.5"

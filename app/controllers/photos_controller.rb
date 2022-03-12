@@ -1,30 +1,35 @@
 class PhotosController < ApplicationController
-  include PhotosHelper
-  before_action :authenticate_user!, except: %i[index preview]
-  before_action :set_photo, only: %i[edit update destroy preview show]
+  skip_before_action :verify_authenticity_token
 
   def index
-    @photos = Photo.published
-    if params.dig(:q, :search).present?
-      @photos = @photos.where('name ILIKE :search or description ILIKE :search', search: "%#{params.dig(:q, :search)}%")
-    elsif params[:order].present? && params[:direction].present?
-      @photos = Photo.ordered_by(params[:order], params[:direction])
+    @search = Photos::Index.run(params)
+    @photos = @search.result
+    respond_to do |format|
+      format.js { render partial: 'photos_main' }
+      format.html
     end
-    @photos = @photos.page(params[:page])
   end
 
   def preview
+    @photo = find_photo!
     @comment = @photo.comments.build
     @comments = @photo.comments.all.includes(:user)
+    @like = @photo.likes.find_by(user: current_user)
+    respond_to do |format|
+      format.js { render partial: 'comments/comments_list' }
+      format.html {}
+    end
   end
 
   private
 
-  def photo_params
-    params.require(:photo).permit(:name, :description, :image)
-  end
+  def find_photo!
+    outcome = Photos::Show.run(params)
 
-  def set_photo
-    @photo = Photo.find(params[:id])
+    if outcome.valid?
+      outcome.result
+    else
+      raise ActiveRecord::RecordNotFound, outcome.errors.full_messages.to_sentence
+    end
   end
 end

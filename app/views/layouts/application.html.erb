@@ -7,22 +7,21 @@
     <%= csp_meta_tag %>
 
     <!-- Warning !! ensure that "stylesheet_pack_tag" is used, line below -->
-    <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_pack_tag 'application', media: 'all'%>
+    <%= javascript_pack_tag 'application' %>
   </head>
 
   <%=render 'shared/navbar'%>
 
-  <div class="alert alert">
+  <div class="alert alert" data-alert>
     <% flash.each do |message_type, message| %>
       <div class="alert alert-<%= message_type %>"> <%= message %> </div>
     <% end %>
   </div>
 
-  <body class='container'>
+  <body class='container' id='mbody' data-main>
     <%= yield %>
   </body>
 
   <%=render 'shared/footer'%>
-
 </html>

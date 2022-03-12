@@ -3,7 +3,7 @@
 # Table name: comments
 #
 #  id               :bigint           not null, primary key
-#  body             :string
+#  body             :string           not null
 #  commentable_type :string           not null
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
@@ -22,5 +22,6 @@
 #
 class CommentSerializer < ApplicationSerializer
   attributes :id, :body
-  has_many :comments
+  
+  belongs_to :photo
 end

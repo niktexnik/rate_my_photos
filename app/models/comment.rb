@@ -3,7 +3,7 @@
 # Table name: comments
 #
 #  id               :bigint           not null, primary key
-#  body             :string
+#  body             :string           not null
 #  commentable_type :string           not null
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
@@ -34,8 +34,6 @@ class Comment < ApplicationRecord
   after_destroy do
     Photo.decrement_counter(:comments_count, photo_id)
   end
-
-  # CommentNotification.with(photo: @photo).deliver_later(current_user)
 
   validates :body, presence: true, length: { minimum: 1, maximum: 4000 }
 end

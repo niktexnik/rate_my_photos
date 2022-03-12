@@ -1,0 +1,29 @@
+<form id='voites'>
+<%= @photo.likes_count %>
+<%if user_signed_in?%>
+  <% pre_like = @photo.likes.find { |like| like.user_id == current_user.id} %>
+    <% if pre_like %>
+      <%= link_to 'Unlike', photo_like_path(@photo, pre_like), method: :delete, class: "btn btn-danger", id: "unlike", remote: true%>
+    <% else %>
+      <%= link_to 'Like', photo_likes_path(@photo), method: :post, class: "btn btn-success", id: "like", remote: true %>
+    <% end %>
+<%end%>
+</form>
+<script>
+    like.addEventListener('click', function (e) {
+        e.preventDefault();
+        
+        fetch('<%=photo_likes_path(@photo)%>', {
+          method: 'POST'
+        })
+        .then(function(response) {
+          return response.text()
+        })
+        .then(function (text) {
+          console.log(text)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+      });
+</script>
