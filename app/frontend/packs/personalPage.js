@@ -2,13 +2,10 @@ window.addEventListener('DOMContentLoaded', () => {
   //cabinet
   const cabinetBtns = document.querySelector('#cabinetBtns');
   const album = document.querySelector("[data-album]");
-  const keyPlace = document.querySelector("#key");
-  //photo
-  const btnSave = document.querySelector('#savePhoto');
-  const btnBackToCabinet = document.querySelector('#backToCabinet');
-  
+  const keyPlace = document.querySelector("[data-keyplace]");
+
   // // //modal
-  const modal = document.querySelector('.modal');
+  const modal = document.querySelector('[data-modal]');
   const modalContent = modal.querySelector('.content');
   const modalCloseBtn = modal.querySelector('[data-close]');
 
