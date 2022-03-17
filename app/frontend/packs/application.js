@@ -10,6 +10,7 @@ import "channels"
 import '../js/bootstrap_js_files.js'
 import '../stylesheets/application.scss'
 import '../stylesheets/modal_dialog.scss'
+import '../stylesheets/notify.scss'
 import 'bootstrap'
 import './mainPage'
 import './1'
@@ -19,4 +20,4 @@ require("../stylesheets/application.scss")
 Rails.start()
 // Turbolinks.start()
 ActiveStorage.start()
-// Notification.requestPermission().then(function (result) {})
+Notification.requestPermission()

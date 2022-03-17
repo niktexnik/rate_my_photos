@@ -19,19 +19,19 @@ class CommentsController < ApplicationController
   end
 
   def create
-    # @comment = Comments::Create.run(params.fetch(:comment, {}).merge(user: current_user, commentable: @commentable))
-    @comment = @commentable.comments.build(comment_params)
-    @comment.user = current_user
-    if @comment.save
+    @comment = Comments::Create.run(params.fetch(:comment, {}).merge(user: current_user, commentable: @commentable))
+    # @comment = @commentable.comments.build(comment_params)
+    # @comment.user = current_user
+    if @comment.valid?
+      photo = Photo.find(@comment.photo_id)
       redirect_back fallback_location: '/'
       flash[:success] = 'Success'
-      # NotificationsChannel.broadcast_to(@photo, @comment)
-      # ActionCable.server.broadcast("NotificationsChannel", "This is cool!.")
-      # NotificationsChannel.broadcast_to(
-      #   current_user,
-      #   title: 'New comment!',
-      #   body: @comment.body
-      # )
+      NotificationsChannel.broadcast_to(
+        @commentable.user,
+        title: 'You have a new comment from user:',
+        body: "#{@comment.user.name} text: #{@comment.body}, Total: #{photo.comments_count}"
+        # body: "#{@comment.user.name} text: #{@comment.body}, Total comments count: #{@comment.photos.comments_count}"
+      )
     else
       # redirect_back fallback_location: '/'
       flash[:danger] = 'Error'

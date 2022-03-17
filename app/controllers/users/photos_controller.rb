@@ -75,6 +75,19 @@ class Users::PhotosController < ApplicationController
   def destroy
     @outcome = Photos::Destroy.run!(photo: @photo)
     REDIS.set @photo.id, @outcome
+    @photo.comments.each do |u|
+      NotificationsChannel.broadcast_to(
+        u.user,
+        title: 'Your comments on the photo will be deleted. Since it will be deleted within 5 minutes:',
+        body: "Name: #{@photo.name}"
+      )
+    end
+
+    NotificationsChannel.broadcast_to(
+      @photo.user,
+      title: 'Your photo has been sent for deletion. it will be deleted within 5 minutes:',
+      body: "Name: #{@photo.name}"
+    )
     respond_to do |format|
       format.js { render partial: 'photos' }
       format.html { redirect_to users_photos_url, notice: 'Deleted Success' }

@@ -108,6 +108,11 @@ ActiveAdmin.register Photo do
       photo.image = photo.image_new
       photo.image_new = nil
     end
+    NotificationsChannel.broadcast_to(
+      photo.user,
+      title: 'Your photo was approved:',
+      body: "Name: #{photo.name}, description: #{photo.description}"
+    )
     photo.update(moderated_date: Time.zone.now)
     photo.aprove!
     redirect_to admin_photos_path
@@ -116,6 +121,11 @@ ActiveAdmin.register Photo do
   member_action :reject do
     photo = Photo.find(params[:id])
     photo.update(rejection_reason: "Photo cant't be published!")
+    NotificationsChannel.broadcast_to(
+      photo.user,
+      title: 'Your photo was rejected:',
+      body: "Name: #{photo.name}, description: #{photo.rejection_reason}"
+    )
     photo.reject!
     redirect_to admin_photos_path
   end

@@ -1,0 +1,24 @@
+  <div class="notify">
+    <div class="notify__dialog">
+        <div class="notify__content">
+          <div data-close class="notify__close">&times;</div>
+          <div class="notify__title">New Notification</div>
+          <div class='content'></div>
+        </div>
+    </div>
+  </div>
+
+  <script>
+    const notify = document.querySelector('.notify');
+    const notifyCloseBtn = notify.querySelector('[data-close]');
+
+    function closeModal() {
+      notify.classList.add('hide');
+      notify.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    if (notifyCloseBtn) {
+      notifyCloseBtn.addEventListener('click', closeModal);
+    }
+  </script>
