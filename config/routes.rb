@@ -12,6 +12,10 @@ Rails.application.routes.draw do
   root to: 'photos#index'
   devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
 
+  match '/404', to: 'errors#not_found', via: :all
+  match '/500', to: 'errors#internal_server', via: :all
+  match '/422', to: 'errors#unprocessable', via: :all
+
   resources :comments do
     resources :comments
   end

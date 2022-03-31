@@ -24,6 +24,7 @@
       <%end%>
     </ul>
   </div>
+<%= paginate @comments %>
 <% end %>
 </div>
 
@@ -39,12 +40,3 @@
   margin-left: 10px;
 }
 </style>
-
-<script>
-document.querySelectorAll(".reply-btn").forEach(el => {
-  el.addEventListener('click', (ev) => {
-    ev.preventDefault();
-    el.nextElementSibling.style = 'display: block;'
-  })
-});
-</script>

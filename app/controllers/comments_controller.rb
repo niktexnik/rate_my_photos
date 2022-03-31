@@ -3,13 +3,12 @@ class CommentsController < ApplicationController
   before_action :set_comment, except: :create
   before_action :authorize_comment!
   after_action :verify_authorized
-
   def update
-    # inputs = { comment: set_comment }.reverse_merge(params[:comment])
+    photo = Photo.find(@comment.photo_id)
     @comment = Comments::Update.run(params[:comment].merge(comment: @comment))
     respond_to do |format|
       if @comment.valid?
-        format.html { redirect_to preview_photo_url(@commentable), notice: 'Updated' }
+        format.html { redirect_to preview_photo_url(photo), notice: 'Updated' }
       else
         format.html { render :edit, notice: ' Not Updated' }
       end

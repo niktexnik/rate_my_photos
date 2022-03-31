@@ -3,7 +3,6 @@
     <div class="search">
       <%= form.label "Text comment" %>
       <%= form.text_field :body %>
-      <%= form.hidden_field :parent_id = @commentable.id if @commentable.class.is_a?(Comment) %>
     </div>
     <div class='btn'>
       <%=form.submit "Confirm", class:'btn btn-success'%>

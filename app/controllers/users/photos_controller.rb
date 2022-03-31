@@ -1,7 +1,7 @@
 class Users::PhotosController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :authenticate_user!, except: %i[index]
-  before_action :set_photo, except: %i[create index restore]
+  before_action :set_photo, only: %i[edit update destroy show]
   before_action :authorize_photo!
   after_action :verify_authorized
 
@@ -32,7 +32,8 @@ class Users::PhotosController < ApplicationController
   end
 
   def create
-    @photo = Photos::Create.run(params.merge(user: @current_user))
+    # @photo = Photos::Create.run(params.merge(user: @current_user))
+    @photo = Photos::Create.run(params[:photo].merge(user: current_user))
     respond_to do |format|
       if @photo.valid?
         format.js { render partial: 'photos', notice: 'Success' }

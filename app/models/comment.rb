@@ -24,14 +24,14 @@
 class Comment < ApplicationRecord
   include Commentable
 
-  # paginates_per Rails.application.credentials.kaminari.dig(:comment_pagination)
+  paginates_per Rails.application.credentials.kaminari.dig(:comment_pagination)
 
   belongs_to :commentable, polymorphic: true
   belongs_to :user
   belongs_to :photo
-  # belongs_to :parent, class_name: 'Comment', optional: true
+  belongs_to :parent, class_name: 'Comment', optional: true
 
-  # has_many :replies, class_name: 'Comment', foreign_key: :parent_id, dependent: :destroy
+  has_many :replies, class_name: 'Comment', foreign_key: :parent_id, dependent: :destroy
 
   after_create do
     Photo.increment_counter(:comments_count, photo_id)

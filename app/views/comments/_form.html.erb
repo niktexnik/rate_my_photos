@@ -3,6 +3,7 @@
   <div class="form-group mb-2">
     <%= f.text_area :body, class: "form-control", placeholder: "Add a comment" %>
     <%= f.hidden_field :photo_id, value: commentable.is_a?(Photo) ? commentable.id : commentable.photo_id %>
+    <%= f.hidden_field :parent_id, value: commentable.id if commentable.is_a?(Comment) %>
   </div>
   <%= f.submit class: "btn btn-primary" %>
 <% end %>
