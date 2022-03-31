@@ -1,16 +1,17 @@
 <%= form_for :search, method: :get, url: photos_url, html: { class: "row g-3 mt-1", data: { search: 'search' } } do |f| -%>
   <div class="col-md-9">
-      <%= text_field_tag :q, @search.q, placeholder: 'Search...', class: 'form-control' %>
+      <%= text_field_tag :search_string, @search.search_string, placeholder: 'Search...', class: 'form-control' %>
   </div>
   <div class="col-md-2">  
-    <%= select_tag :sort, options_for_select([
-      ["Date ⬆", 'created_at.asc'],
-      ["Date ⬇", 'created_at.desc'],
-      ["Likes⬆", 'likes_count.asc'],
-      ["Likes⬇", 'likes_count.desc'],
-      ["Comments⬆", 'comments_count.asc'],
-      ["Comments⬇", 'comments_count.desc'],
-      ], @search.sort), include_blank: "Select sort...", class: "form-select", id:'sort' %>
+    <%= select_tag :order, options_for_select([
+      ["Date", 'created_at'],
+      ["Likes", 'likes_count'],
+      ["Comments", 'comments_count'],
+      ], @search.order), include_blank: "Select sort...", class: "form-select", id:'sort' %>
+       <%= select_tag :direction, options_for_select([
+      ["Ascending ⬆", 'asc'],
+      ["Descending ⬇", 'desc'],
+      ], @search.direction), class: "form-select", id:'sort' %>
   </div>
   <div class="col-auto">  
     <%= f.submit 'Go', class: "btn btn-primary", id:'submit' %>

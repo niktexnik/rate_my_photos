@@ -11,7 +11,9 @@ module Photos
     validates :image_new, presence: false
 
     def execute
-      inputs.select { |key| key.in?(inputs.keys) && key.present? }
+      # inputs.select { |key| key.in?(inputs.keys) && key.present? }
+      photo.name = name if name.present?
+      photo.description = description if description.present?
       if image_new.present?
         photo.image_new = image_new
         photo.change!

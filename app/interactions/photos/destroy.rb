@@ -1,11 +1,11 @@
 module Photos
   class Destroy < ActiveInteraction::Base
     object :photo
-    TIME = 500.minutes
 
     def execute
+      time = Rails.application.credentials.sidekick.dig(:TIME)
       photo.remove!
-      DestroyJob.perform_in(TIME, photo.id)
+      DestroyJob.perform_in(time, photo.id)
     end
   end
 end

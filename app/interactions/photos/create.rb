@@ -3,7 +3,6 @@ module Photos
     file :image
     object :user
     string :name, :description
-    # integer :current_user
 
     validates :image, :name, :description, presence: true
 

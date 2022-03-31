@@ -5,11 +5,9 @@ Rails.application.routes.draw do
     mount Sidekiq::Web => '/sidekiq'
   end
 
-  scope :admin do
-    ActiveAdmin.routes(self)
-    devise_for :admin_users, ActiveAdmin::Devise.config
-    get 'admin/index', to: 'admin/notification#index'
-  end
+  ActiveAdmin.routes(self)
+  devise_for :admin_users, ActiveAdmin::Devise.config
+  get 'admin/index', to: 'admin/notification#index'
 
   root to: 'photos#index'
   devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
@@ -31,10 +29,20 @@ Rails.application.routes.draw do
   end
 
   namespace :api do
-    resources :users
-    resources :photos do
-      resources :comments
-      resources :likes
+    namespace :v1 do
+      resources :users
+      resources :photos do
+        resources :comments
+        resources :likes
+      end
+    end
+  end
+
+  namespace :api do
+    namespace :v1 do
+      resources :comments do
+        resources :comments
+      end
     end
   end
 

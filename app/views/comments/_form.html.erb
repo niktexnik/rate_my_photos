@@ -1,20 +1,8 @@
-
-<h2>New comment:</h2>
-<%if policy(@comment).create?%> 
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-  <%= form_for [commentable, Comment.new], html: { data: { comment: 'comment' } } do |form| %>
-  <div class="container bootdey">
-    <div class="col-md-12 bootstrap snippets">
-      <div class="panel">
-        <div class="panel-body">
-        <%= form.text_field :body, class: 'form-control', placeholder: 'Input your comment (min-1 - max-4000)', rows:"2"%>
-          <div class="mar-top clearfix">
-              <%=form.submit "Send comment", class:'btn btn-lg btn-primary pull-right mt-2'%>
-          </div>
-        </div>
-          <%=form.hidden_field :photo_id, value: commentable.is_a?(Photo) ? commentable.id : commentable.photo_id  %>
-      </div>
-    </div>
+<h3>New comment:</h3>
+<%= form_for [commentable, Comment.new], html: { data: { comment: 'comment' } } do |f| %>
+  <div class="form-group mb-2">
+    <%= f.text_area :body, class: "form-control", placeholder: "Add a comment" %>
+    <%= f.hidden_field :photo_id, value: commentable.is_a?(Photo) ? commentable.id : commentable.photo_id %>
   </div>
-  <%end%>
-<%end%>
+  <%= f.submit class: "btn btn-primary" %>
+<% end %>

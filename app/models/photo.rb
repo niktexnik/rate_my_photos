@@ -28,7 +28,7 @@ class Photo < ApplicationRecord
   include AASM
   include Commentable
 
-  paginates_per 4
+  paginates_per Rails.application.credentials.kaminari.dig(:photo_pagination)
 
   mount_uploader :image, ImageUploader
   mount_uploader :image_new, ImageUploader

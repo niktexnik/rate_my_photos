@@ -18,8 +18,6 @@ ActiveAdmin.register_page 'Notification' do
     form action: 'index', method: :get do |f|
       f.label 'Input text'
       f.input type: :text, name: :input
-      # field to handle authenticity token
-      # f.input type: :hidden, name: :authenticity_token
       f.button :submit, type: :submit
     end
   end

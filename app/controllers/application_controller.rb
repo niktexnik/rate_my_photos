@@ -26,12 +26,4 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit(:sign_up, keys: %i[name image uid provider])
     devise_parameter_sanitizer.permit(:account_update, keys: %i[name image uid provider])
   end
-
-  private
-
-  def api_auth
-    token = request.headers['token']
-    @current_user = User.find_by(api_key: token)
-    head 401
-  end
 end
