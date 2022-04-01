@@ -25,17 +25,8 @@
 #  fk_rails_...  (user_id => users.id)
 #
 class PhotoSerializer < ApplicationSerializer
-  # attributes :id, :name, :description, :image
-
-  # belongs_to :user
-  # has_many :comments
-  # has_many :likes
-
-  attribute  :id
-  attributes :name, :description, :large_url, :thumb_url, :avatar_url, :likes_count
-  attributes :likes
-  attributes :comments
-  attributes :comments_count
+  attributes :id, :name, :description, :large_url, :thumb_url, :avatar_url, :likes_count, :likes
+  attributes :comments, :comments_count
 
   def large_url
     object.image_url(:large)
@@ -49,10 +40,6 @@ class PhotoSerializer < ApplicationSerializer
     object.image_url(:avatar)
   end
 
-  def likes_count
-    object.likes.count
-  end
-
   def likes
     object.likes.map do |like|
       {
@@ -62,14 +49,16 @@ class PhotoSerializer < ApplicationSerializer
     end
   end
 
+  def likes_count
+    object.likes.count
+  end
+
   def comments_count
-    @counter
+    object.comments_count
   end
 
   def comments
-    @counter = 0
     object.comments.map do |comment|
-      @counter += 1
       comment_comments(comment)
     end
   end
@@ -79,8 +68,8 @@ class PhotoSerializer < ApplicationSerializer
       user_id: comment.user_id,
       comment_id: comment.id,
       comment_body: comment.body,
+      parent_id: comment.parent_id,
       comment_comments: comment.comments.map do |comment|
-        @counter += 1
         comment_comments(comment)
       end
     }

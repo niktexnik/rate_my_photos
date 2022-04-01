@@ -32,7 +32,6 @@ class Users::PhotosController < ApplicationController
   end
 
   def create
-    # @photo = Photos::Create.run(params.merge(user: @current_user))
     @photo = Photos::Create.run(params[:photo].merge(user: current_user))
     respond_to do |format|
       if @photo.valid?
@@ -71,14 +70,14 @@ class Users::PhotosController < ApplicationController
     @photo.comments.each do |u|
       NotificationsChannel.broadcast_to(
         u.user,
-        title: 'Your comments on the photo will be deleted. Since it will be deleted within 5 minutes:',
+        title: 'Your comments will be deleted. Photo:',
         body: "Name: #{@photo.name}"
       )
     end
 
     NotificationsChannel.broadcast_to(
       @photo.user,
-      title: 'Your photo has been sent for deletion. it will be deleted within 5 minutes:',
+      title: 'Your photo has been sent for deletion:',
       body: "Name: #{@photo.name}"
     )
     respond_to do |format|
