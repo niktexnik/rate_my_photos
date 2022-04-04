@@ -6,14 +6,16 @@
       <p class="text"> <%= comment.body %> </p>
     </div>
     <p class="text">by: <%=comment.user.name%> <i><%=time_ago_in_words(comment.created_at) %> ago </i></p>
-    <div class='mb-2' data-btns-action>
-      <%if policy(comment).destroy?%>
-        <%= link_to "Delete", photo_comment_path(commentable.is_a?(Photo) ? commentable.id : commentable.photo_id, comment), data: { method: :delete, confirm: "Are you shure" }, class: "btn btn-danger", id: 'deleteComment' %>
-      <%end%>
-      <%if policy(comment).update?%>
-        <%= link_to "Edit", edit_photo_comment_path(commentable.is_a?(Photo) ? commentable.id : commentable.photo_id, comment, comment), class: "btn btn-warning", id: 'editComment' %>
-      <%end%>
-    </div>
+    <% if !comment.comments.any? %>
+      <div class='mb-2'>
+        <%if policy(comment).destroy?%>
+          <%= link_to "Delete", photo_comment_path(commentable.is_a?(Photo) ? commentable.id : commentable.photo_id, comment), data: { method: :delete, confirm: "Are you shure" }, class: "btn btn-danger", id: 'deleteComment' %>
+        <%end%>
+        <%if policy(comment).update?%>
+          <%= link_to "Edit", edit_photo_comment_path(commentable.is_a?(Photo) ? commentable.id : commentable.photo_id, comment, comment), class: "btn btn-warning", id: 'editComment' %>
+        <%end%>
+      </div>
+    <%end%>
     <%= link_to 'reply', '#', class: 'reply-btn' %>
     <div class='reply'>
       <%=render partial: "comments/form", locals: {commentable: comment}%>
