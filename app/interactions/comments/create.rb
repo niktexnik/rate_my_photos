@@ -11,11 +11,6 @@ module Comments
     validates :body, presence: true
 
     def execute
-      puts "!!!!!!!!Comment_id!!!!!!!!#{inputs}"
-      puts "!!!!!!!!Comment_id!!!!!!!!#{comment_id}"
-      puts "!!!!!!!!Photo_id!!!!!!!!#{photo_id}"
-      puts "!!!!!!!!Commentaable2!!!!!!!!#{@commentable}"
-
       comment = @commentable.comments.build(body: body, user: user, commentable: @commentable,
                                             photo_id: photo_id, parent_id: parent_id)
       if comment.valid?
@@ -37,7 +32,6 @@ module Comments
         elsif inputs[:photo_id].present?
           Photo.find(inputs[:photo_id])
         end
-      puts "!!!!!!!!Commentaable1!!!!!!!!#{@commentable}"
     end
   end
 end

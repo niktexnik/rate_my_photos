@@ -27,6 +27,7 @@
 class PhotoSerializer < ApplicationSerializer
   attributes :id, :name, :description, :large_url, :thumb_url, :avatar_url, :likes_count, :likes
   attributes :comments, :comments_count
+  attributes :show_link
 
   def large_url
     object.image_url(:large)
@@ -73,5 +74,9 @@ class PhotoSerializer < ApplicationSerializer
         comment_comments(comment)
       end
     }
+  end
+
+  def show_link
+    api_v1_photo_path(object)
   end
 end

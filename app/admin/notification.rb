@@ -2,15 +2,10 @@ ActiveAdmin.register_page 'Notification' do
   menu label: 'Notification'
   controller do
     def index
-      @text_notification = params[:input]
-      users = User.all
-      users.each do |user|
-        NotificationsChannel.broadcast_to(
-          user,
-          title: 'ADMIN NOTIFICATION:',
-          body: @text_notification
-        )
-      end
+      ActionCable.server.broadcast 'admin_channel', {
+        title: 'ADMIN NOTIFICATION:',
+        body: params[:input]
+      }
     end
   end
 

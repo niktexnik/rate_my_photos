@@ -1,8 +1,11 @@
 module Api
   module V1
     class CommentsController < ::Api::ApiController
-      before_action :api_auth
+      before_action :current_user
+      after_action :verify_authorized
+
       def create
+        authorize [:api, Comment]
         comment = Comments::Create.run(params.merge(user: @current_user))
         if comment.valid?
           render json: { message: 'Success', comment: comment.result }, status: :created, each_serializer: CommentSerializer
@@ -13,7 +16,7 @@ module Api
 
       def destroy
         comment = Comment.find(params[:id])
-        raise Pundit::NotAuthorizedError unless @current_user.id == comment.user.id
+        authorize [:api, comment]
         comment = Comments::Destroy.run!(comment: comment)
         if comment.valid?
           render json: { message: 'Success' }, status: :ok, each_serializer: CommentSerializer
@@ -24,8 +27,7 @@ module Api
 
       def update
         comment = Comment.find(params[:id])
-        raise Pundit::NotAuthorizedError unless @current_user.id == comment.user.id
-        # inputs = { comment: comment }.reverse_merge(params[:comment])
+        authorize [:api, comment]
         comment = Comments::Update.run(params.merge(comment: comment))
         if comment.valid?
           render json: { message: 'Success', comment: comment.result }, status: :ok, each_serializer: CommentSerializer

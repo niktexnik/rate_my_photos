@@ -1,11 +1,14 @@
 module Api
   module V1
     class LikesController < ::Api::ApiController
-      before_action :set_photo, only: %i[create destroy]
+      before_action :current_user
+      before_action :set_photo
+      after_action :verify_authorized
 
       def create
-        like = Likes::Create.run(params.fetch(:like, {}).merge(user: @current_user, photo: @photo))
-        if @like.valid?
+        authorize [:api, Like]
+        like = Likes::Create.run(params.merge(user: @current_user, photo: @photo))
+        if like.valid?
           render json: like.result, status: :created, each_serializer: LikeSerializer
         else
           render json: like.errors.details, status: :unprocessable_entity, each_serializer: LikeSerializer
@@ -14,9 +17,10 @@ module Api
 
       def destroy
         like = @photo.likes.find(params[:id])
+        authorize [:api, @like]
         Likes::Destroy.run!(like: like)
-        if like.valid?
-          render json: { message: 'Success', like: like.result }, status: :ok, each_serializer: LikeSerializer
+        if photo.valid?
+          render json: { message: 'Success', like: photo.result }, status: :ok, each_serializer: LikeSerializer
         else
           render json: like.errors.details, status: :unprocessable_entity, each_serializer: LikeSerializer
         end

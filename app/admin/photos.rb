@@ -110,9 +110,9 @@ ActiveAdmin.register Photo do
     end
     # actions
     actions defaults: false do |photo|
-      item "edit ", edit_admin_photo_path(photo)
-      item " view ", admin_photo_path(photo)
-      item " remove", remove_admin_photo_path(photo)
+      item "edit", edit_admin_photo_path(photo), class: 'member_link'
+      item "view", admin_photo_path(photo), class: 'member_link'
+      item "remove", remove_admin_photo_path(photo), class: 'member_link'
     end
   end
 
@@ -160,6 +160,11 @@ ActiveAdmin.register Photo do
     photo = Photo.find(params[:id])
     outcome = Photos::Destroy.run!(photo: photo)
     REDIS.set photo.id, outcome
+    NotificationsChannel.broadcast_to(
+      photo.user,
+      title: 'Your photo has been sent for deletion:',
+      body: "Name: #{@photo.name}"
+    )
     redirect_to admin_photos_path
   end
 end

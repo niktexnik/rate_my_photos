@@ -1,70 +1,53 @@
 module Api
   module V1
     class PhotosController < ::Api::ApiController
-      before_action :api_auth, except: %i[index show]
+      after_action :verify_authorized, except: %i[index show]
+      before_action :current_user, except: %i[index show]
 
       def index
         photos = Photos::IndexApi.run(params)
-        if photos.valid?
-          photos = photos.result.includes(:comments).page(params.dig(:page, :number)).per(params.dig(:page, :size))
-          # photos = photos.result.includes(:comments)
-          render json: photos, meta: pagination_dict(photos), status: :ok, each_serializer: PhotoSerializer
-        else
-          render json: photos.errors.details, status: :bad_request, each_serializer: PhotoSerializer
-        end
+        render json: photos.result, meta: pagination_dict(photos.result),
+               fields: %i[id name description likes_count comments_count thumb_url show_link],
+               status: :ok, each_serializer: PhotoSerializer
       end
 
       def show
         photo = Photos::Show.run(params)
-        if photo.valid?
-          render json: photo.result, status: :ok, serializer: PhotoSerializer
-        else
-          render json: photo.errors.details, status: :bad_request, each_serializer: PhotoSerializer
-        end
+        render json: photo.result,
+               fields: %i[id name description likes_count comments_count large_url comments],
+               status: :ok, serializer: PhotoSerializer
       end
 
       def destroy
         photo = Photo.find(params[:id])
-        raise Pundit::NotAuthorizedError unless @current_user.id == photo.user.id
-
+        authorize [:api, photo]
         photo = Photos::Destroy.run(params)
         if photo.valid?
-          render json: { message: 'Success', photo: photo.result }, status: :ok, each_serializer: PhotoSerializer
+          render json: { message: 'Success', photo: photo.result }, status: :no_content, each_serializer: PhotoSerializer
         else
           render json: { message: 'Error', photo: photo.errors.details }, status: :unprocessable_entity, serializer: PhotoSerializer
         end
       end
 
       def create
+        authorize [:api, Photo]
         photo = Photos::Create.run(params.merge(user: @current_user))
         if photo.valid?
-          render json: { message: 'Success', photo: photo.result }, status: :created, each_serializer: PhotoSerializer
+          render json: photo.result, status: :created, serializer: PhotoSerializer
         else
-          render json: photo.errors.details, status: :unprocessable_entity, each_serializer: PhotoSerializer
+          render json: photo.errors.details, status: :unprocessable_entity, serializer: PhotoSerializer
         end
       end
 
       def update
         photo = Photo.find(params[:id])
-        raise Pundit::NotAuthorizedError unless @current_user.id == photo.user.id
+        authorize [:api, photo]
         photo = Photos::Update.run(params.merge(photo: photo))
         if photo.valid?
           render json: { message: 'Success', photo: photo }, status: :ok, each_serializer: PhotoSerializer
         else
           render json: photo.errors.details, status: :unprocessable_entity, each_serializer: PhotoSerializer
         end
-      end
-
-      private
-
-      def pagination_dict(object)
-        {
-          current_page: object.current_page,
-          next_page: object.next_page,
-          prev_page: object.prev_page,
-          total_pages: object.total_pages,
-          total_count: object.total_count
-        }
       end
     end
   end

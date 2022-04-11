@@ -3,12 +3,12 @@
       <%= text_field_tag :search_string, @search.search_string, placeholder: 'Search...', class: 'form-control' %>
   </div>
   <div class="col-md-2"> 
-    <%= select_tag :sort, options_for_select([
+    <%= select_tag :filter, options_for_select([
       ["Pending", 'pending'],
       ["Published", 'published'],
       ["Rejected", 'rejected'],
       ["Removed", 'removed'],
-      ], @search.sort), include_blank: "Select sort...", class: "form-select" %>
+      ], @search.filter), include_blank: "Select sort...", class: "form-select" %>
   </div>
   <div class="col-auto">  
     <%= f.submit 'Go', class: "btn btn-primary" %>

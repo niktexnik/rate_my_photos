@@ -6,7 +6,8 @@ class Users::PhotosController < ApplicationController
   after_action :verify_authorized
 
   def index
-    @search = Photos::IndexCabinet.run(params.merge(user: current_user))
+    puts params
+    @search = Photos::Index.run(params.merge(user: current_user))
     @photos = @search.result
     respond_to do |format|
       format.js { render partial: 'photos' }
@@ -15,11 +16,9 @@ class Users::PhotosController < ApplicationController
   end
 
   def show
-    @comment = @photo.comments.build
-    @comments = @photo.comments.all.includes(:user)
     respond_to do |format|
-      format.js { render :show }
-      format.html
+      format.js {}
+      format.html {}
     end
   end
 
@@ -74,21 +73,10 @@ class Users::PhotosController < ApplicationController
         body: "Name: #{@photo.name}"
       )
     end
-
-    NotificationsChannel.broadcast_to(
-      @photo.user,
-      title: 'Your photo has been sent for deletion:',
-      body: "Name: #{@photo.name}"
-    )
-    respond_to do |format|
-      format.js { render partial: 'photos' }
-      format.html { redirect_to users_photos_url, notice: 'Deleted Success' }
-    end
   end
 
   def restore
-    @photo = Photo.find(params[:photo_id])
-    @photo = Photos::Revert.run(photo: @photo)
+    @photo = Photos::Revert.run(photo: Photo.find(params[:photo_id]))
     respond_to do |format|
       format.js { render partial: 'photos', notice: 'Restored' }
       format.html { redirect_to users_photos_url, notice: 'Restored' }
@@ -102,6 +90,6 @@ class Users::PhotosController < ApplicationController
   end
 
   def authorize_photo!
-    authorize(@photo || Photo)
+    authorize [:users, @photo || Photo]
   end
 end

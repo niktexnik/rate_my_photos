@@ -1,11 +1,12 @@
 module Photos
   class Destroy < ActiveInteraction::Base
     object :photo
+    attr_reader :my_job
 
     def execute
-      time = Rails.application.credentials.sidekick.dig(:TIME)
       photo.remove!
-      DestroyJob.perform_in(time, photo.id)
+      @my_job = DestroyJob.perform_in(Rails.application.credentials.sidekick.dig(:TIME), photo.id)
+      photo
     end
   end
 end

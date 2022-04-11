@@ -4,7 +4,8 @@ class LikesController < ApplicationController
 
   def create
     @like = Likes::Create.run(params.fetch(:like, {}).merge(user: current_user, photo: @photo))
-    if @like.valid?
+    if @photo.valid?
+      # LikesNotification.new(params).like
       NotificationsChannel.broadcast_to(
         @photo.user,
         title: 'Your photo was liked by user:',
@@ -23,6 +24,7 @@ class LikesController < ApplicationController
   def destroy
     @like = @photo.likes.find(params[:id])
     Likes::Destroy.run!(like: @like)
+    # LikesNotification.new(params).unlike
     NotificationsChannel.broadcast_to(
       @photo.user,
       title: 'Your photo was unliked by user:',

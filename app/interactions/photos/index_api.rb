@@ -2,16 +2,14 @@ module Photos
   class IndexApi < ActiveInteraction::Base
     string :search_string, default: nil
     string :order, :direction, default: nil
-    # hash :page do
-    #   integer :number, :size, default: nil
-    # end
+    integer :number, :size, default: nil
 
     def execute
-      # puts "!!!!!!!!!!!!!#{size}!!!!!!!!!!!!!#{number}"
+      puts "!!!!!!!!!!!!!#{size}!!!!!!!!!!!!!#{number}"
       photos = Photo.published
       photos = photos.filter_by(search_string) if given?(:search_string)
       photos = photos.ordered_by(order, direction) if given?(:order && :direction)
-      # photos.page(number).per(size)
+      photos = photos.page(number).per(size).includes(:comments)
       photos
     end
   end
