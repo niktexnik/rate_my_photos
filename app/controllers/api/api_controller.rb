@@ -1,14 +1,14 @@
 module Api
   class ApiController < ActionController::API
     # serialization_scope :view_context
-    serialization_scope :current_user
-    include ExeptionsHandler
+    include ExceptionsHandler
     include Pundit
+    serialization_scope :current_user
 
     private
 
     def current_user
-      @current_user ||= User.find_by(api_key: request.headers['token']) or raise Pundit::NotAuthorizedError
+      @current_user ||= User.find_by(api_key: request.headers['token'])
     end
 
     def pundit_user

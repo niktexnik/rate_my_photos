@@ -15,8 +15,8 @@ consumer.subscriptions.create("NotificationsChannel", {
 
   createLine(data) {
     return `
-    <span class="speaker">${data["title"]}</span>
-    <span class="body">${data["body"]}</span>
+    <p class="speaker">${data["title"]}</p>
+    <p class="body">${data["body"]}</p>
     `;
   },
   //=================MODAL================================

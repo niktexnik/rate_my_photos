@@ -1,4 +1,4 @@
-module ExeptionsHandlerWeb
+module ExceptionsHandlerWeb
   extend ActiveSupport::Concern
 
   included do

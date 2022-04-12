@@ -6,6 +6,7 @@ module Api
 
       def index
         photos = Photos::IndexApi.run(params)
+        authorize [:api, Photo]
         render json: photos.result, meta: pagination_dict(photos.result),
                fields: %i[id name description likes_count comments_count thumb_url show_link],
                status: :ok, each_serializer: PhotoSerializer
@@ -21,11 +22,11 @@ module Api
       def destroy
         photo = Photo.find(params[:id])
         authorize [:api, photo]
-        photo = Photos::Destroy.run(params)
-        if photo.valid?
-          render json: { message: 'Success', photo: photo.result }, status: :no_content, each_serializer: PhotoSerializer
+        outcome = Photos::Destroy.run(photo: photo)
+        if outcome.valid?
+          render json: { message: 'Success', photo: outcome.result }, status: :no_content, each_serializer: PhotoSerializer
         else
-          render json: { message: 'Error', photo: photo.errors.details }, status: :unprocessable_entity, serializer: PhotoSerializer
+          render json: { message: 'Error', photo: outcome.errors.details }, status: outcome.response_status || 422
         end
       end
 

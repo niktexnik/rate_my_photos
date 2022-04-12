@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   include Pundit
-  include ExeptionsHandlerWeb
+  include ExceptionsHandlerWeb
 
   before_action :configure_permitted_parameters, if: :devise_controller?
 

@@ -18,6 +18,7 @@ class Api::PhotoPolicy < ApplicationPolicy
   end
 
   def destroy?
+    byebug
     user.id == record.user_id
   end
 end

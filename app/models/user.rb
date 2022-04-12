@@ -62,6 +62,7 @@ class User < ApplicationRecord
     self.api_key = generate_api_key
   end
 
+
   private
 
   def generate_api_key
