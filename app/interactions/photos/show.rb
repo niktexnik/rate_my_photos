@@ -3,7 +3,7 @@ module Photos
     integer :id
 
     def execute
-      photo = Photo.find_by_id(id)
+      photo = Photo.find(id)
 
       photo || errors.add(:id, 'does not exist')
     end

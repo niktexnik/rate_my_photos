@@ -28,7 +28,7 @@ class Photo < ApplicationRecord
   include AASM
   include Commentable
 
-  paginates_per 4
+  paginates_per Rails.application.credentials.kaminari.dig(:photo_pagination)
 
   mount_uploader :image, ImageUploader
   mount_uploader :image_new, ImageUploader
@@ -49,6 +49,35 @@ class Photo < ApplicationRecord
   end)
 
   scope :filter_by, ->(search) { where('name ILIKE :search or description ILIKE :search', search: "%#{search}%") }
+
+
+  # EVENTS_LIST = %i[reject approve]
+  NOTIFICATIONS_HASH = {
+    reject: {
+      title: "Your photo was rejected",
+      body: "Name: %{name}, description: %{description}",
+      name: :name,
+      description: :rejection_reason
+    },
+    approve: {
+      title: "Your photo was approved",
+      body: "Name: %{name}, description: %{description}",
+      name: :name,
+      description: :rejection_reason
+    }
+  }
+
+  def send_notification_about(event)
+    return if NOTIFICATIONS_HASH.keys.exclude?(event)
+
+    NotificationsChannel.broadcast_to(
+      NOTIFICATIONS_HASH.dig(event, :user).present? ? public_send(NOTIFICATIONS_HASH.dig(event, :user)) : user,
+      title: NOTIFICATIONS_HASH.dig(event, :title),
+      body: format(NOTIFICATIONS_HASH.dig(event, :body), 
+                   name: public_send(NOTIFICATIONS_HASH.dig(event, :name)), 
+                   description: public_send(NOTIFICATIONS_HASH.dig(event, :description))),
+    )
+  end
 
   # AASM config
   aasm column: :status do

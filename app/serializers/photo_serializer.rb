@@ -25,9 +25,58 @@
 #  fk_rails_...  (user_id => users.id)
 #
 class PhotoSerializer < ApplicationSerializer
-  attributes :id, :name, :description, :image
+  attributes :id, :name, :description, :large_url, :thumb_url, :avatar_url, :likes_count, :likes
+  attributes :comments, :comments_count
+  attributes :show_link
 
-  belongs_to :user
-  has_many :comments
-  has_many :likes
+  def large_url
+    object.image_url(:large)
+  end
+
+  def thumb_url
+    object.image_url(:thumb)
+  end
+
+  def avatar_url
+    object.image_url(:avatar)
+  end
+
+  def likes
+    object.likes.map do |like|
+      {
+        like_id: like.id,
+        user_id: like.user_id
+      }
+    end
+  end
+
+  def likes_count
+    object.likes.count
+  end
+
+  def comments_count
+    object.comments_count
+  end
+
+  def comments
+    object.comments.map do |comment|
+      comment_comments(comment)
+    end
+  end
+
+  def comment_comments(comment)
+    {
+      user_id: comment.user_id,
+      comment_id: comment.id,
+      comment_body: comment.body,
+      parent_id: comment.parent_id,
+      comment_comments: comment.comments.map do |comment|
+        comment_comments(comment)
+      end
+    }
+  end
+
+  def show_link
+    api_v1_photo_path(object)
+  end
 end

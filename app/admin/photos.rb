@@ -3,10 +3,11 @@ ActiveAdmin.register Photo do
 
   permit_params :image, :image_new, :name, :description, :status, :rejection_reason, :moderated_date
 
-  scope :all, default: true
+  scope :all
   scope :published
   scope :pending
   scope :rejected
+  scope :removed
 
   batch_action :revert do |ids|
     batch_action_collection.find(ids).each do |photo|
@@ -37,6 +38,9 @@ ActiveAdmin.register Photo do
   end
   action_item :aprove, only: :show do
     link_to 'Revert', revert_admin_photo_path(photo), method: :put if photo.rejected?
+  end
+  action_item :restore, only: :show do
+    link_to 'Restore', restore_admin_photo_path(photo), method: :put if photo.removed?
   end
 
   show do
@@ -98,8 +102,18 @@ ActiveAdmin.register Photo do
           link_to :revert, revert_admin_photo_path(photo)
         end
       end
+      if photo.removed?
+        columns do
+          link_to :restore, restore_admin_photo_path(photo)
+        end
+      end
     end
-    actions
+    # actions
+    actions defaults: false do |photo|
+      item "edit", edit_admin_photo_path(photo), class: 'member_link'
+      item "view", admin_photo_path(photo), class: 'member_link'
+      item "remove", remove_admin_photo_path(photo), class: 'member_link'
+    end
   end
 
   member_action :aprove do
@@ -108,6 +122,11 @@ ActiveAdmin.register Photo do
       photo.image = photo.image_new
       photo.image_new = nil
     end
+    NotificationsChannel.broadcast_to(
+      photo.user,
+      title: 'Your photo was approved:',
+      body: "Name: #{photo.name}, description: #{photo.description}"
+    )
     photo.update(moderated_date: Time.zone.now)
     photo.aprove!
     redirect_to admin_photos_path
@@ -116,6 +135,12 @@ ActiveAdmin.register Photo do
   member_action :reject do
     photo = Photo.find(params[:id])
     photo.update(rejection_reason: "Photo cant't be published!")
+    # NotificationsChannel.broadcast_to(
+    #   photo.user,
+    #   title: 'Your photo was rejected:',
+    #   body: "Name: #{photo.name}, description: #{photo.rejection_reason}"
+    # )
+    photo.send_notification_about(:reject)
     photo.reject!
     redirect_to admin_photos_path
   end
@@ -124,6 +149,23 @@ ActiveAdmin.register Photo do
     photo = Photo.find(params[:id])
     photo.update(rejection_reason: nil, moderated_date: nil)
     photo.revert!
+    redirect_to admin_photos_path
+  end
+
+  member_action :restore do
+    photo = Photo.find(params[:id])
+    @photo = Photos::Revert.run(photo: photo)
+    redirect_to admin_photos_path
+  end
+  member_action :remove do
+    photo = Photo.find(params[:id])
+    outcome = Photos::Destroy.run!(photo: photo)
+    REDIS.set photo.id, outcome
+    NotificationsChannel.broadcast_to(
+      photo.user,
+      title: 'Your photo has been sent for deletion:',
+      body: "Name: #{@photo.name}"
+    )
     redirect_to admin_photos_path
   end
 end

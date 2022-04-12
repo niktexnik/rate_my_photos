@@ -3,12 +3,10 @@ module Comments
     object :comment
     string :body
 
-    validates :body, presence: true, unless: -> { body.nil? }
+    validates :body, presence: true
 
     def execute
-      comment.body = body if body.present?
-
-      errors.merge!(comment.errors) unless comment.save
+      errors.merge!(comment.errors) unless comment.Update(body: body)
 
       comment
     end

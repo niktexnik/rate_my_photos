@@ -1,5 +1,4 @@
 <h2><%= @photo.name %></h2>
-<%= puts "FROM PREVIEW=====PHOTO++++#{@photo}, LIKE++++#{@like}" %>
 <div class="card mb-3">
   <div class="row g-0">
     <%= image_tag @photo.image.url(:large), class: 'img-fluid rounded-start'%>
@@ -15,6 +14,8 @@
 		  <%= link_to "Back", root_path, class: 'btn btn-warning'%>
     </div>
     <div class='container' data-list>
+    <ul>
       <%= render 'comments/comments_list' %>
+    </ul>
     </div>
 </div>

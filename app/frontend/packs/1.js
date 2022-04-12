@@ -10,6 +10,7 @@ function createComment(form) {
       return response.text();
     }).then(function (text) {
       commentList.innerHTML = text;
+      showReply()
       initComment(document.querySelectorAll('[data-comment]'));
       // initLikeJs(document.querySelectorAll('[data-like-id]'));
     }).catch(function (error) {
@@ -17,11 +18,20 @@ function createComment(form) {
     });
   });
 }
-
-function initComment(forms) {
-  forms.forEach((form) => createComment(form));
+function showReply() {
+  document.querySelectorAll(".reply-btn").forEach(el => {
+    el.addEventListener('click', (ev) => {
+      ev.preventDefault();
+      el.nextElementSibling.style = 'display: block;';
+    });
+  });
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-  initComment(document.querySelectorAll('[data-comment]'));
-});
+  function initComment(forms) {
+    forms.forEach((form) => createComment(form));
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    initComment(document.querySelectorAll('[data-comment]'));
+    showReply();
+  });

@@ -3,9 +3,7 @@ module Likes
     object :photo, :user
 
     def execute
-      like = photo.likes.create(inputs)
-      errors.merge!(like.errors) unless like.save
-
+      errors.merge!(like.errors) unless like = photo.likes.create(inputs)
       like
     end
   end

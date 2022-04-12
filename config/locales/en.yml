@@ -34,3 +34,9 @@ en:
   notifications:
         comment_notification:
           message: "You have a new comment"
+  photos:
+    notifications:
+      approve_title: "Your photo was approved"
+      approve_body: "Name: %{name}, description: %{description}"
+      reject_title: "Your photo was rejected"
+      reject_body: "Name: %{name}, description: %{description}"

@@ -1,30 +1,37 @@
 module Comments
   class Create < ActiveInteraction::Base
-    string :body
+    set_callback :type_check, :before do
+      find_commentable
+    end
+
     object :user, class: User
-    object :commentable
-    integer :photo_id
+    string :body
+    integer :photo_id, :comment_id, :parent_id, default: nil
 
     validates :body, presence: true
 
     def execute
-      puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#{photo_id}"
-      puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#{body}"
-      puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#{commentable}"
-      puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#{user}"
-
-      comment = commentable.comments.build(body: body, user: user, commentable: commentable, photo: photo_id)
-
+      comment = @commentable.comments.build(body: body, user: user, commentable: @commentable,
+                                            photo_id: photo_id, parent_id: parent_id)
+      if comment.valid?
+        NotificationsChannel.broadcast_to(
+          @commentable.user,
+          title: 'You have a new comment from user:',
+          body: "#{comment.user.name} text: #{comment.body}, Total: #{Photo.find(photo_id).comments_count}"
+        )
+      end
       errors.merge!(comment.errors) unless comment.save
 
       comment
-      puts "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#{comment.errors.messages}"
+    end
+
+    def find_commentable
+      @commentable =
+        if inputs[:comment_id].present?
+          Comment.find(inputs[:comment_id])
+        elsif inputs[:photo_id].present?
+          Photo.find(inputs[:photo_id])
+        end
     end
   end
 end
-
-# comment = if commentable.is_a?(Photo)
-#   commentable.comments.create(body: body, user: user, photo: commentable)
-# else
-#   commentable.comments.create(body: body, user: user, commentable: commentable.id, photo: photo.id)
-# end
